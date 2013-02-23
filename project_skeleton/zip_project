@@ -1,0 +1,15 @@
+#!/bin/bash
+
+ROOT_DIR=`pwd`
+DESTINATION_DIR=android/res/raw
+APP_DIR=app
+
+echo "Removing old zip archive..."
+rm $DESTINATION_DIR/app.zip
+echo "Creating new zip archive..."
+cd $APP_DIR
+zip app main.py view.qml
+cd $ROOT_DIR
+cp $APP_DIR/app.zip $DESTINATION_DIR
+rm $APP_DIR/app.zip
+echo "Done."

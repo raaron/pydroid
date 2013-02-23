@@ -1,0 +1,19 @@
+Android PySide example project
+==============================
+This is an example project that demonstrates how to build
+self-contained Python + PySide + Qt Components Applications
+for Android.
+
+Just load it to the Necessitas QtCreator and press "deploy".
+It will automatically generate a self-contained APK an deploy
+it either to the Android simulator or to any device that is connected with
+USB and has debugging enabled.
+
+You can also modify this project and use it as a base for you
+ own application.
+
+More information
+================
+For more information about this project & PySide for android,
+check out the main info page on:
+http://modrana.org/trac/wiki/PySideForAndroid

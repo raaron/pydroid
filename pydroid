@@ -1,0 +1,45 @@
+#!/usr/bin/python
+
+import sys
+import os
+import shutil
+import subprocess
+
+
+ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
+SKELETON_DIR = os.path.join(ROOT_DIR, 'project_skeleton')
+
+
+def create_new_project(app_name, domain):
+    """Create a new project with name 'app_name' from the skeleton project."""
+
+    unique_name = '.'.join([app_name, domain])
+    dst = os.path.join(ROOT_DIR, app_name)
+    if os.path.exists(dst):
+        print "A directory with name %s already exists." % app_name
+        sys.exit(1)
+    shutil.copytree(SKELETON_DIR, dst)
+    os.chdir(dst)
+    subprocess.call(["bash", "rename_project", app_name, domain])
+
+
+def main(argv):
+    """
+    Check if an app name and the domain were specified and whether the
+    skeleton project exists. If so, create the new project, else print
+    an error message.
+    """
+    if len(argv) < 2:
+        print "Error: Not enough arguments."
+        print "Syntax: ./pydroid app_name domain"
+        sys.exit(1)
+    elif not os.path.exists(SKELETON_DIR):
+        print "Error: Could not find the template for creating the project."
+        print "Expected the template at:", SKELETON_DIR
+        sys.exit(1)
+    else:
+        create_new_project(argv[0], argv[1])
+
+if __name__ == "__main__":
+    # create_new_project(["asdf", "foo.bar"])
+    main(sys.argv[1:])
