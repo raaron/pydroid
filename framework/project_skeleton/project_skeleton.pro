@@ -1,6 +1,6 @@
 QT       += core gui declarative
 
-TARGET = ProjectSkeleton
+TARGET = project_skeleton
 
 INCLUDEPATH += $$PWD/build_dependencies/python/include/
 LIBS += -L$$PWD/build_dependencies/python -lpython2.7

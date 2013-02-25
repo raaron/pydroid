@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.modrana.ProjectSkeleton.R;
+import org.modrana.project_skeleton.R;
 import org.kde.necessitas.ministro.IMinistro;
 import org.kde.necessitas.ministro.IMinistroCallback;
 
@@ -344,11 +344,11 @@ public class QtActivity extends Activity
     {
         try
         {
-            File f = new File("/data/data/org.modrana.ProjectSkeleton/files/main.py");
+            File f = new File("/data/data/org.modrana.project_skeleton/files/main.py");
             if(!f.exists())
         	copyResourcesToLocal();
-            System.load("/data/data/org.modrana.ProjectSkeleton/files/python/lib/libpython2.7.so");
-            System.load("/data/data/org.modrana.ProjectSkeleton/files/python/lib/libsqlite3.so");
+            System.load("/data/data/org.modrana.project_skeleton/files/python/lib/libpython2.7.so");
+            System.load("/data/data/org.modrana.project_skeleton/files/python/lib/libsqlite3.so");
             ActivityInfo ai=getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
             if (ai.metaData.containsKey("android.app.qt_libs_resource_id"))
             {
