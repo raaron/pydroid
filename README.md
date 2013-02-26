@@ -14,7 +14,7 @@ Deploying the project to the Android device
 -------------------------------------------
 After editing any file in the "app" directory, zipping this directory into android/res/raw is required before deploying the app to the device:
 
-    ./zip_project
+    ./zip_app
 
 Then open the file my_project_name.pro in the Necessitas Qt Creator and deploy the app using the green deploy button.
 

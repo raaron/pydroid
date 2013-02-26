@@ -10,8 +10,10 @@ import zipfile
 ZIPPED_PYTHON_FILES = ["main.py"]
 OTHER_ZIPPED_FILES = ["view.qml"]
 
-ZIP_PATH = os.path.join("android", "res", "raw", "app.zip")
-APP_DIR = 'app'
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+ZIP_PATH = os.path.join(PROJECT_DIR, "android", "res", "raw", "app.zip")
+APP_DIR = os.path.join(PROJECT_DIR, 'app')
 
 print "Removing old zip archive..."
 print

@@ -52,3 +52,7 @@ OTHER_FILES += \
     android/res/values-et/strings.xml \
     android/AndroidManifest.xml
 
+# Define pre-build script
+mytarget.commands = python $$PWD/scripts/zip_app.py
+QMAKE_EXTRA_TARGETS += mytarget
+PRE_TARGETDEPS += mytarget
