@@ -26,11 +26,11 @@ print
 print "Included files: %s" % ', '.join(ZIPPED_PYTHON_FILES + OTHER_ZIPPED_FILES)
 print
 
-zf = zipfile.ZipFile(ZIP_PATH, mode='w')
+zf = zipfile.PyZipFile(ZIP_PATH, mode='w')
 os.chdir(APP_DIR)
 try:
     for fn in ZIPPED_PYTHON_FILES:
-        zf.write(fn)
+        zf.writepy('.')
     for fn in OTHER_ZIPPED_FILES:
         zf.write(fn)
 finally:

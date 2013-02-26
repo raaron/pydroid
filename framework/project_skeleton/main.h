@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define MAIN_PYTHON_FILE "/data/data/org.modrana.project_skeleton/files/main.py"
+#define MAIN_PYTHON_FILE "/data/data/org.modrana.project_skeleton/files/main.pyc"
 
 #define PYTHON_HOME "/data/data/org.modrana.project_skeleton/files/python/"
 

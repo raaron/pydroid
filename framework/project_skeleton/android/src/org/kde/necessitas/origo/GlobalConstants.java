@@ -2,7 +2,7 @@ package org.kde.necessitas.origo;
 
 public class GlobalConstants {
 
-	public static final String PYTHON_MAIN_SCRIPT_NAME = "main.py";
+	public static final String PYTHON_MAIN_SCRIPT_NAME = "main.pyc";
 	public static final String PYTHON_PROJECT_ZIP_NAME = "app.zip";
 	public static final String PYTHON_ZIP_NAME = "python_27.zip";
 	public static final String PYTHON_EXTRAS_ZIP_NAME = "python_extras_27.zip";

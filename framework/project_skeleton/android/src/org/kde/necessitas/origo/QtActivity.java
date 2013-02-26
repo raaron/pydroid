@@ -344,7 +344,7 @@ public class QtActivity extends Activity
     {
         try
         {
-            File f = new File("/data/data/org.modrana.project_skeleton/files/main.py");
+            File f = new File("/data/data/org.modrana.project_skeleton/files/main.pyc");
             if(!f.exists())
         	copyResourcesToLocal();
             System.load("/data/data/org.modrana.project_skeleton/files/python/lib/libpython2.7.so");
