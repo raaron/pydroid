@@ -12,6 +12,8 @@ HEADERS  += \
     main.h
 OTHER_FILES += \
     app/main.py \
+    app/view.py \
+    app/android_util.py \
     app/view.qml \
     android/src/org/kde/necessitas/ministro/IMinistro.aidl \
     android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \

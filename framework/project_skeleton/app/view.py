@@ -1,7 +1,3 @@
-# This file is currently useless, because importing .py files from main.py
-# fails. But for the future, it would be nice, to separate the view code from
-# the logging and importing setup in main.py.
-
 from PySide.QtDeclarative import *
 
 

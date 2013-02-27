@@ -6,9 +6,10 @@
 import os
 import zipfile
 
+
+# Python files are automatically included into the generated zipp archive.
 # Add additional files to include in the zip archive here
-ZIPPED_PYTHON_FILES = ["main.py"]
-OTHER_ZIPPED_FILES = ["view.qml"]
+NON_PYTHON_FILES = ["view.qml"]
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
@@ -24,16 +25,12 @@ except OSError:
 
 print "Creating new zip archive at:"
 print ZIP_PATH
-print
-print "Included files: %s" % ', '.join(ZIPPED_PYTHON_FILES + OTHER_ZIPPED_FILES)
-print
 
 zf = zipfile.PyZipFile(ZIP_PATH, mode='w')
 os.chdir(APP_DIR)
 try:
-    for fn in ZIPPED_PYTHON_FILES:
-        zf.writepy('.')
-    for fn in OTHER_ZIPPED_FILES:
+    zf.writepy('.')
+    for fn in NON_PYTHON_FILES:
         zf.write(fn)
 finally:
     zf.close()
