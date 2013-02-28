@@ -1,7 +1,6 @@
 High priority
 =============
 - Set up a virtual machine for virtualbox
-- Successfully compile PySide and Python on a non-Kolman machine:-)
 - Simplify the project structure:
   - lib               various libraries, including not PySide related added as
                       dependency by the application developer.
