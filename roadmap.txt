@@ -48,6 +48,7 @@ Medium priority
     project): http://pyjnius.readthedocs.org/en/latest/index.html
   - write examples to demonstrate this features
 
+
 Low priority
 ============
 - Blog about the project (e.g. planet python)
