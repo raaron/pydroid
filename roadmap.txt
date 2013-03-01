@@ -24,10 +24,9 @@ Medium priority
 - option to generate either a full project with Qt Components or just a QML one
   (without Qt Components & theme)
 - specify the project icon
-- include third party libraries & binaries easily (eq. you give path to so file
-  or executable and it gets included in the python27.zip and deployed either to
-  files/python/lib (which is in LD_LIBRARY_PATH) or files/python/bin (which is
-  in PATH)
+- include third party binaries easily (eq. you give path to so file
+  or executable and it gets deployed to files/python/bin (which is
+  in PATH))
 - set what bindings to include (maybe based on android/values/libs.xml - this
   file lists all Qt Libs that would be requested from Ministro & actually used,
   no use to deploy bindings for libs that aren't there)
