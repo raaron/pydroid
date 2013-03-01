@@ -22,11 +22,11 @@ By pressing the "Run" button in QtCreator the 'app' folder is automatically zipp
 
 ### Fast Deployment
 Use this variant, if you made changes inside the folder 'app' only. You need a rooted device to be able to perform this deployment variant.
-The script
+The following script removes the old files in the directory 'app' from the device and inserts the new ones instaed.
 
     ./fast_deploy
 
-removes the old files in the directory 'app' from the device and inserts the new ones instaed. You can add this script to
+You can add this script to
 
     QtCreator->Tools->External->Configure->Add->Add Tool
 
