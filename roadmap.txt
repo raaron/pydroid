@@ -38,9 +38,6 @@ Medium priority
     architectures are needed
   - could be combined with the archive generator & adb install to quickly test
     both applications & library changes
-- checking if the Python stdout can be redirected to the Android log in the C++
-  wrapper -> Qt Creator could be used to check both the QML & Python output &
-  you would not have to check the logfiles manually
 - check Android integration
   - hardware buttons should probably be accessible through Necessitas Qt libs
   - the are some Python bindings for most of the Android stuff, like showing

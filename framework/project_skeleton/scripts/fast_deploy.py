@@ -23,6 +23,7 @@ LS_CMD = CMD_PREFIX + ["ls", ANDROID_APP_DIR]
 START_APP_CMD = [ADB_PATH, "shell", "am", "start", "-n", "%s/org.kde.necessitas.origo.QtActivity" % PACKAGE_NAME]
 STOP_APP_CMD = [ADB_PATH, "shell", "am", "force-stop", PACKAGE_NAME]
 LOG_CMD = [ADB_PATH, "shell", "logcat"]
+CLEAR_LOG_CMD = LOG_CMD + ["-c"]
 
 
 def remove_old_files():
@@ -71,7 +72,8 @@ def restart_app():
     """
     subprocess.call(STOP_APP_CMD)
     subprocess.call(START_APP_CMD)
-    # subprocess.call(LOG_CMD)
+    subprocess.call(CLEAR_LOG_CMD)
+    subprocess.call(LOG_CMD)
 
 
 def main():
@@ -80,8 +82,8 @@ def main():
     the device, (re)start the app, show log output.
     """
     remove_old_files()
-    # copy_files()
-    # restart_app()
+    copy_files()
+    restart_app()
 
 
 if __name__ == "__main__":
