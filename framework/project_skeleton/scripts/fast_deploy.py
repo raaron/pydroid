@@ -1,9 +1,11 @@
 #!/usr/bin/python
 
+import sys
 import os
 import ConfigParser
 import subprocess
 import compileall
+
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 APP_DIR = os.path.join(PROJECT_DIR, 'app')
@@ -28,10 +30,13 @@ def remove_old_files():
     Removes everything in the app from "/data/data/PACKAGE_NAME/files/" except of
     the "python" library.
     """
-    p = subprocess.Popen(LS_CMD, shell=False, stdout=subprocess.PIPE)
-    output = p.communicate()[0]
+    p = subprocess.Popen(LS_CMD, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    if err:
+        print err
+        sys.exit(0)
 
-    files = [fn for fn in output.split('\r\n') if fn and fn != 'python']
+    files = [fn for fn in out.split('\r\n') if fn and fn != 'python']
     print "Removing:", files
     for fn in files:
         rm_cmd = CMD_PREFIX + ["rm", os.path.join(ANDROID_APP_DIR, fn)]
@@ -43,7 +48,8 @@ def copy_files():
     Bytecompile all python source files, copy them together with the .qml files
     to the android device.
     """
-    compileall.compile_dir(APP_DIR, force=True)
+    if not compileall.compile_dir(APP_DIR, maxlevels=100, quiet=True):
+        sys.exit(0)
     for root, dirs, files in os.walk(APP_DIR):
         for fn in files:
             if not fn.endswith('.py'):
@@ -74,8 +80,8 @@ def main():
     the device, (re)start the app, show log output.
     """
     remove_old_files()
-    copy_files()
-    restart_app()
+    # copy_files()
+    # restart_app()
 
 
 if __name__ == "__main__":
