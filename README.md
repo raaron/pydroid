@@ -45,3 +45,17 @@ If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the 
     ./zip_python_lib
 
 Then perform a 'Complete Deployment' to deploy the created library with the additional module.
+
+Logging
+-------
+You can log the string representation of any python object to the normal android logcat (displayed by QtCreator when running the app) with the following command:
+
+    from android_util import log
+    log(any_object)
+
+Or if you prefer having visual log output on your device, you may use the following:
+
+    from android_util import logv
+    logv(any_object)
+
+This shows the string representation of any python object in a MessageBox on the device.
