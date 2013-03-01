@@ -16,23 +16,30 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 ZIP_PATH = os.path.join(PROJECT_DIR, "android", "res", "raw", "app.zip")
 APP_DIR = os.path.join(PROJECT_DIR, 'app')
 
-print "Removing old zip archive..."
-print
-try:
-    os.remove(ZIP_PATH)
-except OSError:
-    pass
+def zip_app():
+    """Remove the old zip archive and create the new one from 'app'."""
 
-print "Creating new zip archive at:"
-print ZIP_PATH
+    print "Removing old zip archive..."
+    print
+    try:
+        os.remove(ZIP_PATH)
+    except OSError:
+        pass
 
-zf = zipfile.PyZipFile(ZIP_PATH, mode='w')
-os.chdir(APP_DIR)
-try:
-    zf.writepy('.')
-    for fn in NON_PYTHON_FILES:
-        zf.write(fn)
-finally:
-    zf.close()
+    print "Creating new zip archive at:"
+    print ZIP_PATH
 
-print "Done."
+    zf = zipfile.PyZipFile(ZIP_PATH, mode='w')
+    os.chdir(APP_DIR)
+    try:
+        zf.writepy('.')
+        for fn in NON_PYTHON_FILES:
+            zf.write(fn)
+    finally:
+        zf.close()
+
+    print "Done."
+
+
+if __name__ == '__main__':
+    zip_app()

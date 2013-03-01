@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=X-MeeGoTouch-Metatheme
+Name=Blanco
+Encoding=UTF-8
+
+[X-MeeGoTouch-Metatheme]
+X-Inherits=base
+X-Icon="icon-l-meegotouchtheme-blanco"
+X-Visible=true

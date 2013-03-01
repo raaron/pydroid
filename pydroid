@@ -29,8 +29,8 @@ def main(argv):
     skeleton project exists. If so, create the new project, else print
     an error message.
     """
-    if len(argv) < 2:
-        print "Error: Not enough arguments, expected 2."
+    if len(argv) != 2:
+        print "Error: Invalid argument count: got %d instead of 2." % len(argv)
         print "Syntax: ./pydroid app_name domain"
         sys.exit(1)
     elif not os.path.exists(SKELETON_DIR):

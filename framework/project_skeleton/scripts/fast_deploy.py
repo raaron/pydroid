@@ -7,7 +7,8 @@ import subprocess
 import compileall
 
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+PROJECT_DIR = os.getcwd()
+print PROJECT_DIR
 APP_DIR = os.path.join(PROJECT_DIR, 'app')
 CONFIG_FILE = os.path.join(PROJECT_DIR, "project.conf")
 
@@ -72,8 +73,8 @@ def restart_app():
     """
     subprocess.call(STOP_APP_CMD)
     subprocess.call(START_APP_CMD)
-    subprocess.call(CLEAR_LOG_CMD)
-    subprocess.call(LOG_CMD)
+    # subprocess.call(CLEAR_LOG_CMD)
+    # subprocess.call(LOG_CMD)
 
 
 def main():

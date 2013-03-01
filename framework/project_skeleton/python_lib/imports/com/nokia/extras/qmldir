@@ -1,0 +1,23 @@
+plugin meegoextrasplugin
+CountBubble 1.0 CountBubble.qml
+DatePickerDialog 1.0 DatePickerDialog.qml
+InfoBanner 1.0 InfoBanner.qml
+InfoBannerStyle 1.0 InfoBannerStyle.qml
+ListDelegate 1.0 ListDelegate.qml
+MoreIndicator 1.0 MoreIndicator.qml
+NetPromoterScore 1.0 NetPromoterScore.qml
+PageIndicator 1.0 PageIndicator.qml
+RatingIndicator 1.0 RatingIndicator.qml
+TimePickerDialog 1.0 TimePickerDialog.qml
+Tumbler 1.0 Tumbler.qml
+TumblerColumn 1.0 TumblerColumn.qml
+TumblerButton 1.0 TumblerButton.qml
+TumblerDialog 1.0 TumblerDialog.qml
+ListButton 1.0 ListButton.qml
+ListButtonStyle 1.0 ListButtonStyle.qml
+NegativeButtonStyle 1.0 NegativeButtonStyle.qml
+PositiveButtonStyle 1.0 PositiveButtonStyle.qml
+SystemBanner 1.0 SystemBanner.qml
+TumblerButtonStyle 1.0 TumblerButtonStyle.qml
+TumblerNew 1.0 TumblerNew.qml
+TumblerDialogNew 1.0 TumblerDialogNew.qml

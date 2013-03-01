@@ -69,7 +69,7 @@ def main(argv):
     """
 
     if len(argv) != 2:
-        print "Error: Invalid argument count: got $d instead of 2." % len(argv)
+        print "Error: Invalid argument count: got %d instead of 2." % len(argv)
         print "Syntax: ./rename new_app_name new_domain"
         sys.exit(1)
     else:
