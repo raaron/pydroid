@@ -26,11 +26,11 @@ def rename_project(new_name, new_domain):
     Renames all directories and files to the new name and domain and adapts
     the code accordingly.
     """
-    new_unique_name = '.'.join([new_domain, new_name])
+    new_package_name = '.'.join([new_domain, new_name])
     conf = ConfigParser.ConfigParser()
     conf.read(CONFIG_FILE)
-    old_name = conf.get("General", "name")
-    old_unique_name = conf.get("General", "unique_name")
+    old_name = conf.get("General", "app_name")
+    old_package_name = conf.get("General", "package_name")
 
     shutil.move("%s.pro" % old_name, "%s.pro" % new_name)
 
@@ -38,7 +38,7 @@ def rename_project(new_name, new_domain):
              "android/src/org/kde/necessitas/origo/QtActivity.java",
              "android/AndroidManifest.xml"]
     for fn in files:
-        python_sed(old_unique_name, new_unique_name, fn)
+        python_sed(old_package_name, new_package_name, fn)
 
     files = ["%s.pro" % new_name,
              "android/AndroidManifest.xml",
@@ -55,8 +55,8 @@ def rename_project(new_name, new_domain):
     except IOError:
         pass
 
-    conf.set("General", "name", new_name)
-    conf.set("General", "unique_name", new_unique_name)
+    conf.set("General", "app_name", new_name)
+    conf.set("General", "package_name", new_package_name)
     with file(CONFIG_FILE, "w") as fobj:
         conf.write(fobj)
 
