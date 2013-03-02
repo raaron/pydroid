@@ -1,0 +1,6 @@
+*
+!.gitignore
+!framework/
+!README.md
+!pydroid
+!roadmap.txt

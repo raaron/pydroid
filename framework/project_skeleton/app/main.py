@@ -18,7 +18,7 @@ from PySide.QtDeclarative import *
 
 import view
 
-APP_DIR = os.path.dirname(__file__)
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_DIR = '/sdcard/'
 STDOUT_PATH = os.path.join(LOG_DIR, 'pyside_example_log.txt')
 STDERR_PATH = os.path.join(LOG_DIR, 'pyside_example_error_log.txt')
