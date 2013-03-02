@@ -3,8 +3,10 @@
 # Zipps files in the directory "app" and places the created archive in
 # android/res/raw
 
+import sys
 import os
 import zipfile
+import compileall
 
 
 # Python files are automatically included into the generated zipp archive.
@@ -19,6 +21,9 @@ APP_DIR = os.path.join(PROJECT_DIR, 'app')
 
 def zip_app():
     """Remove the old zip archive and create the new one from 'app'."""
+
+    if not compileall.compile_dir(APP_DIR, maxlevels=100, quiet=True):
+        sys.exit(0)
 
     print "Removing old zip archive..."
     print
