@@ -321,15 +321,15 @@ public class QtActivity extends Activity
 				content.reset();
 
 				// python project
-				if (sFileName.endsWith(GlobalConstants.PYTHON_PROJECT_ZIP_NAME)) {
+				if (sFileName.endsWith(GlobalConstants.APP_ZIP_NAME)) {
                                         succeed &= Utils.unzip(content, this.getFilesDir()
                                         .getAbsolutePath() + "/", true);
                                         //this.getFilesDir().getAbsolutePath() +
 				}
 				// python -> /data/data/com.android.python27/files/python
-				else if (sFileName.endsWith(GlobalConstants.PYTHON_ZIP_NAME)) {
+				else if (sFileName.endsWith(GlobalConstants.LIBS_ZIP_NAME)) {
 					succeed &= Utils.unzip(content, this.getFilesDir()
-							.getAbsolutePath() + "/python/", false);
+							.getAbsolutePath() + "/libs/", false);
 					FileUtils.chmod(new File(this.getFilesDir()
 							.getAbsolutePath()
 							+ GlobalConstants.PYTHON_BIN_RELATIVE_PATH), 755);
@@ -344,11 +344,13 @@ public class QtActivity extends Activity
     {
         try
         {
-            File f = new File("/data/data/org.modrana.project_skeleton/files/main.pyc");
+            File f = new File("/data/data/org.modrana.project_skeleton/files/app/main.pyc");
             if(!f.exists())
-        	copyResourcesToLocal();
-            System.load("/data/data/org.modrana.project_skeleton/files/python/lib/libpython2.7.so");
-            System.load("/data/data/org.modrana.project_skeleton/files/python/lib/libsqlite3.so");
+        	   copyResourcesToLocal();
+
+            System.load("/data/data/org.modrana.project_skeleton/files/libs/python27/libpython2.7.so");
+            //System.load("/data/data/org.modrana.project_skeleton/files/python/lib/libsqlite3.so");
+
             ActivityInfo ai=getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
             if (ai.metaData.containsKey("android.app.qt_libs_resource_id"))
             {

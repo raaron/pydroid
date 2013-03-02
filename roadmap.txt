@@ -1,11 +1,6 @@
 High priority
 =============
 - Set up a virtual machine for virtualbox
-- Simplify the project structure:
-  - lib               various libraries, including not PySide related added as
-                      dependency by the application developer.
-  - lib/python2.7     just Python modules
-  - lib/PySide        the PySide bingings
 - Prepare a .apk and a sample project for Android 2.3.3 (API level 8 or 9)
 - Get information about arm version (armv5, armv6, armv7):
   - backwards compatible?
@@ -25,8 +20,7 @@ Medium priority
   (without Qt Components & theme)
 - specify the project icon
 - include third party binaries easily (eq. you give path to so file
-  or executable and it gets deployed to files/python/bin (which is
-  in PATH))
+  or executable and it gets deployed to files/bin (add it to PATH))
 - set what bindings to include (maybe based on android/values/libs.xml - this
   file lists all Qt Libs that would be requested from Ministro & actually used,
   no use to deploy bindings for libs that aren't there)

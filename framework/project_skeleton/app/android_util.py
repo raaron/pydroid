@@ -12,7 +12,7 @@ def load_shiboken_and_pyside():
     """
     # PYSIDE_APPLICATION_FOLDER is set in main.h in the Example project
     PROJECT_FOLDER = os.environ['PYSIDE_APPLICATION_FOLDER']
-    LIB_DIR = os.path.join(PROJECT_FOLDER, 'files/python/lib')
+    LIB_DIR = os.path.join(PROJECT_FOLDER, 'files/libs/python27')
     CDLL(os.path.join(LIB_DIR, 'libshiboken.so'))
     CDLL(os.path.join(LIB_DIR, 'libpyside.so'))
 

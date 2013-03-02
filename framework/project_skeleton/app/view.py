@@ -1,4 +1,7 @@
 from PySide.QtDeclarative import *
+# from PySide.QtGui import *
+
+# from android_util import logv
 
 
 class View(QDeclarativeView):

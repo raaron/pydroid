@@ -6,10 +6,6 @@ import sys
 import os
 import traceback
 
-# Add the "app" directory to sys.path to be able to import other python files
-# on Android.
-sys.path.append(os.path.dirname(__file__))
-
 import android_util
 
 # Load libshiboken and libpyside before doing PySide imports on Android
@@ -22,7 +18,7 @@ from PySide.QtDeclarative import *
 
 import view
 
-
+APP_DIR = os.path.dirname(__file__)
 LOG_DIR = '/sdcard/'
 STDOUT_PATH = os.path.join(LOG_DIR, 'pyside_example_log.txt')
 STDERR_PATH = os.path.join(LOG_DIR, 'pyside_example_error_log.txt')
@@ -42,6 +38,7 @@ def main():
     Start the app.
     If we are on an android device, setup the logging first.
     """
+    os.chdir(APP_DIR)
     if android_util.is_on_android:
         print("** Log for pydroid App **")
 

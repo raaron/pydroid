@@ -17,7 +17,7 @@ Deploying the project to the Android device
 After editing any file in the "app" directory, zipping this directory into android/res/raw is required before deploying the app to the device. This is automatically done when using Complete Deploy and Fast Deploy by the script scripts/zip_app.py. Additional files in the direcory "app" that also have to be zipped, have to be specified in this script.
 
 ### Complete Deployment (slow)
-Use this variant for the first deployment or if you made changes in any file outside of the folder 'app', e.g. in 'python_lib' by adding a new python package.
+Use this variant for the first deployment or if you made changes in any file outside of the folder 'app', e.g. in 'libs' by adding a new python package.
 By pressing the "Run" button in QtCreator the 'app' folder is automatically zipped. The complete project is then deployed to the device. This takes much more time than using the Fast Deploy.
 
 ### Fast Deployment
@@ -39,10 +39,10 @@ Rename a project
 
 Add python packages
 -------------------
-If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the following commands to install new packages into python_lib and then zip them again:
+If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the following commands to install new packages into 'libs/python27' and then zip them again:
 
     ./pydroid_pip_install package_name
-    ./zip_python_lib
+    ./zip_libs
 
 Then perform a 'Complete Deployment' to deploy the created library with the additional module.
 

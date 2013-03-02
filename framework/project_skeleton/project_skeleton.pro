@@ -2,8 +2,8 @@ QT       += core gui declarative
 
 TARGET = project_skeleton
 
-INCLUDEPATH += $$PWD/build_dependencies/python/include/
-LIBS += -L$$PWD/build_dependencies/python -lpython2.7
+INCLUDEPATH += $$PWD/libs/python27/build_dependencies/
+LIBS += -L$$PWD/libs/python27 -lpython2.7
 
 QMAKE_CXXFLAGS += -std=gnu++0x
 SOURCES += main.cpp
@@ -23,8 +23,7 @@ OTHER_FILES += \
     android/src/org/kde/necessitas/origo/Utils.java \
     android/version.xml \
     android/res/raw/app.zip \
-    android/res/raw/python_27.zip \
-    android/res/raw/python_extras_27.zip \
+    android/res/raw/libs.zip \
     android/res/values-el/strings.xml \
     android/res/values-rs/strings.xml \
     android/res/values-ro/strings.xml \

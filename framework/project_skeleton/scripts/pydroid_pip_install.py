@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Installs a python package into 'python_lib' using 'pip'
+# Installs a python package into 'libs/python27' using 'pip'
 
 import sys
 import os
@@ -11,11 +11,11 @@ from pip.exceptions import DistributionNotFound
 
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-LIB_DIR = os.path.join(PROJECT_DIR, 'python_lib')
+LIB_DIR = os.path.join(PROJECT_DIR, 'libs', 'python27')
 
 
 def install(name):
-    """Try to install the package with 'name' into folder 'python_lib'."""
+    """Try to install the package with 'name' into folder 'libs/python27'."""
 
     print "Installation directory:"
     print LIB_DIR

@@ -18,7 +18,7 @@ PACKAGE_NAME = conf.get("General", "package_name")
 ADB_PATH = conf.get("General", "adb_path")
 
 PUBLIC_ANDROID_DIR = "/sdcard"
-ANDROID_APP_DIR = "/data/data/%s/files/" % PACKAGE_NAME
+ANDROID_APP_DIR = "/data/data/%s/files/app/" % PACKAGE_NAME
 CMD_PREFIX = [ADB_PATH, "shell", "run-as", PACKAGE_NAME]
 LS_CMD = CMD_PREFIX + ["ls", ANDROID_APP_DIR]
 START_APP_CMD = [ADB_PATH, "shell", "am", "start", "-n", "%s/org.kde.necessitas.origo.QtActivity" % PACKAGE_NAME]
@@ -52,17 +52,35 @@ def copy_files():
     """
     if not compileall.compile_dir(APP_DIR, maxlevels=100, quiet=True):
         sys.exit(0)
+
+    root_len = len(os.path.abspath(APP_DIR))
     for root, dirs, files in os.walk(APP_DIR):
+        archive_root = os.path.abspath(root)[root_len + 1:]
+
+        for d in dirs:
+            dest_dir = os.path.join(ANDROID_APP_DIR, archive_root, d)
+            print "Making directory:", dest_dir
+            mkdir_cmd = [ADB_PATH, "shell", "su -c 'mkdir %s'" % dest_dir]
+            subprocess.call(mkdir_cmd)
+
         for fn in files:
             if not fn.endswith('.py'):
-                src_path = os.path.join(APP_DIR, fn)
-                dest_path = os.path.join(ANDROID_APP_DIR, fn)
-                sd_card_fn = os.path.join(PUBLIC_ANDROID_DIR, fn)
+                src_path = os.path.join(root, fn)
+                dest_path = os.path.join(ANDROID_APP_DIR, archive_root, fn)
+                sd_card_fn = os.path.join(PUBLIC_ANDROID_DIR, archive_root, fn)
                 push_cmd = [ADB_PATH, "push", src_path, sd_card_fn]
                 subprocess.call(push_cmd)
                 print "Copying:", src_path
                 cat_cmd = [ADB_PATH, "shell", "su -c 'cat %s > %s'" % (sd_card_fn, dest_path)]
                 subprocess.call(cat_cmd)
+
+    # root_len = len(os.path.abspath(LIB_DIR))
+    # for root, dirs, files in os.walk(LIB_DIR):
+    #     archive_root = os.path.abspath(root)[root_len:]
+    #     for f in files:
+    #         fullpath = os.path.join(root, f)
+    #         archive_name = os.path.join(archive_root, f)
+    #         zf.write(fullpath, archive_name)
 
 
 def restart_app():
