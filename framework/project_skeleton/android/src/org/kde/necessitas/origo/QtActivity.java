@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.modrana.project_skeleton.R;
+import t.e.test.R;
 import org.kde.necessitas.ministro.IMinistro;
 import org.kde.necessitas.ministro.IMinistroCallback;
 
@@ -42,6 +42,7 @@ import com.googlecode.android_scripting.FileUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,6 +60,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -303,53 +305,27 @@ public class QtActivity extends Activity
         });
         errorDialog.show();
     }
-    private void copyResourcesToLocal() {
-		String name, sFileName;
-		InputStream content;
 
-		R.raw a = new R.raw();
-		java.lang.reflect.Field[] t = R.raw.class.getFields();
-		Resources resources = getResources();
-		boolean succeed = true;
+    private void copyResourcesToLocal(final boolean firstStart) {
+        new DownloadManager().execute(firstStart);
+    }
 
-		for (int i = 0; i < t.length; i++) {
-			try {
-				name = resources.getText(t[i].getInt(a)).toString();
-				sFileName = name.substring(name.lastIndexOf('/') + 1,
-						name.length());
-				content = getResources().openRawResource(t[i].getInt(a));
-				content.reset();
-
-				// python project
-				if (sFileName.endsWith(GlobalConstants.APP_ZIP_NAME)) {
-                                        succeed &= Utils.unzip(content, this.getFilesDir()
-                                        .getAbsolutePath() + "/", true);
-                                        //this.getFilesDir().getAbsolutePath() +
-				}
-				// python -> /data/data/com.android.python27/files/python
-				else if (sFileName.endsWith(GlobalConstants.LIBS_ZIP_NAME)) {
-					succeed &= Utils.unzip(content, this.getFilesDir()
-							.getAbsolutePath() + "/libs/", false);
-					FileUtils.chmod(new File(this.getFilesDir()
-							.getAbsolutePath()
-							+ GlobalConstants.PYTHON_BIN_RELATIVE_PATH), 755);
-				}
-
-			} catch (Exception e) {
-				succeed = false;
-			}
-		} // end for all files in res/raw
-	}
     private void startApp(final boolean firstStart)
+    {
+        File f = new File("/data/data/t.e.test/files/app/main.pyc");
+        if(!f.exists())
+            copyResourcesToLocal(firstStart);
+        else
+            startLoadedApp(firstStart);
+    }
+
+
+    private void startLoadedApp(final boolean firstStart)
     {
         try
         {
-            File f = new File("/data/data/org.modrana.project_skeleton/files/app/main.pyc");
-            if(!f.exists())
-        	   copyResourcesToLocal();
-
-            System.load("/data/data/org.modrana.project_skeleton/files/libs/python27/libpython2.7.so");
-            //System.load("/data/data/org.modrana.project_skeleton/files/python/lib/libsqlite3.so");
+            System.load("/data/data/t.e.test/files/libs/python27/libpython2.7.so");
+            //System.load("/data/data/t.e.test/files/python/lib/libsqlite3.so");
 
             ActivityInfo ai=getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
             if (ai.metaData.containsKey("android.app.qt_libs_resource_id"))
@@ -402,7 +378,6 @@ public class QtActivity extends Activity
                                                             :"org.kde.necessitas.industrius.QtActivityDelegate");
                 loaderParams.putStringArrayList(NATIVE_LIBRARIES_KEY, libraryList);
                 loaderParams.putString(ENVIRONMENT_VARIABLES_KEY,"QML_IMPORT_PATH=/data/local/qt/imports\tQT_PLUGIN_PATH=/data/local/qt/plugins");
-                //\tPYTHON_HOME=/data/data/com.android.python27/files/python/\tPYTHON_PATH=/data/data/com.android.python27/files/python/lib:/data/data/com.android.python27/files/extras/python:/data/data/com.android.python27/files/python/lib/python2.7/lib-dynload:/data/data/com.android.python27/files/python/lib/python2.7:/data/data/com.android.python27/files/ministro/libs:/data/data/com.android.python27/files/extras/python/site-packages\tLD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/data/com.android.python27/files/python/lib:/data/data/com.android.python27/files/python/lib/python2.7/lib-dynload:/data/data/com.android.python27/files/extras/python/site-packages:/data/data/com.android.python27/files/ministro/libs\tPATH=$PYTHONHOME/bin:$PYTHONHOME/lib:$PATH");
                 loaderParams.putString(APPLICATION_PARAMETERS_KEY,"-platform\tandroid");
                 loadApplication(loaderParams);
                 return;
@@ -1327,4 +1302,80 @@ public class QtActivity extends Activity
     //---------------------------------------------------------------------------
 //@ANDROID-12
 
+    public class DownloadManager extends AsyncTask<Boolean, Integer, Void> {
+
+        private ProgressDialog m_dialog = null;
+        boolean firstStart;
+
+        @Override
+        protected void onPreExecute() {
+
+            int zip_size = 0;
+            Resources resources = getResources();
+
+            try {
+                zip_size += resources.openRawResource(R.raw.app).available() / 100000;
+                zip_size += resources.openRawResource(R.raw.libs).available() / 100000;
+            } catch (Exception e) { }
+
+            m_dialog = new ProgressDialog(QtActivity.this);
+            m_dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            m_dialog.setTitle("Installing....");
+            m_dialog.setMessage("Please wait....");
+            m_dialog.setCancelable(false);
+            m_dialog.setMax(zip_size);
+            m_dialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Boolean... params) {
+
+            Resources resources = getResources();
+            String name;
+            InputStream content;
+            R.raw a = new R.raw();
+            java.lang.reflect.Field[] t = R.raw.class.getFields();
+            String files_dir = QtActivity.this.getFilesDir().getAbsolutePath() + "/";
+            firstStart = params[0];
+
+            try {
+                for (int i = 0; i < t.length; i++) {
+                    name = resources.getText(t[i].getInt(a)).toString();
+                    content = resources.openRawResource(t[i].getInt(a));
+                    content.reset();
+
+                    // Extract folders 'app' and 'libs'
+                    // 'app'  -> '/data/data/com.example.my_app/files/app'
+                    // 'libs' -> '/data/data/com.example.my_app/files/libs'
+                    if (name.endsWith(GlobalConstants.APP_ZIP_NAME) ||
+                        name.endsWith(GlobalConstants.LIBS_ZIP_NAME)) {
+                        Utils.unzip(content, files_dir, true, this);
+                    }
+                } // end for all files in res/raw
+            } catch(Exception e) { Log.e("fredi", "Error in fredi:", e); }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            m_dialog.setProgress(values[0]);
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if (m_dialog != null)
+            {
+                m_dialog.dismiss();
+                m_dialog = null;
+                startLoadedApp(firstStart);
+            }
+        }
+
+        public void doProgress(int value){
+            publishProgress(value);
+        }
+    }
 }

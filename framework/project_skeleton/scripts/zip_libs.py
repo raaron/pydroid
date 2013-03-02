@@ -26,14 +26,13 @@ def zip_lib():
     print ZIP_PATH
 
     zf = zipfile.ZipFile(ZIP_PATH, mode='w')
-    os.chdir(LIB_DIR)
     try:
-        root_len = len(os.path.abspath(LIB_DIR))
+        root_len = len(PROJECT_DIR)
         for root, dirs, files in os.walk(LIB_DIR):
-            archive_root = os.path.abspath(root)[root_len:]
+            dir_path_from_root = root[root_len:]
             for f in files:
                 fullpath = os.path.join(root, f)
-                archive_name = os.path.join(archive_root, f)
+                archive_name = os.path.join(dir_path_from_root, f)
                 zf.write(fullpath, archive_name)
     finally:
         zf.close()
