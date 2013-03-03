@@ -11,9 +11,9 @@
 
 #define PATH "/data/data/org.modrana.project_skeleton/files/libs/bin:$PATH"
 
-#define THEME_PATH "/data/data/org.modrana.project_skeleton/files/libs/python27/themes/"
+#define THEME_PATH "/data/data/org.modrana.project_skeleton/files/libs/qt_components/themes/"
 
-#define QML_IMPORT_PATH "/data/data/org.modrana.project_skeleton/files/libs/python27/imports/"
+#define QML_IMPORT_PATH "/data/data/org.modrana.project_skeleton/files/libs/qt_components/components/"
 
 #define PYSIDE_APPLICATION_FOLDER "/data/data/org.modrana.project_skeleton/"
 

@@ -7,6 +7,7 @@ import compileall
 import ConfigParser
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+PYDROID_DIR = os.path.dirname(PROJECT_DIR)
 APP_DIR = os.path.join(PROJECT_DIR, 'app')
 LIBS_DIR = os.path.join(PROJECT_DIR, 'libs')
 PYTHON27_DIR = os.path.join(LIBS_DIR, 'python27')
