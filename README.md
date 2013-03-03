@@ -33,10 +33,11 @@ After editing any file in the "app" directory, zipping this directory into andro
 ### Complete Deployment (slow)
 Use this variant for the first deployment or if you made changes in any file outside of the folder 'app', e.g. in 'libs' by adding a new python package. There are two options to perform a complete deployment:
 
-#### QtCreator
+QtCreator:
 By pressing the "Run" button in QtCreator the 'app' folder is automatically zipped. The complete project is then deployed to the device. This takes much more time than using the Fast Deploy.
 
-#### Commandline
+Commandline:
+
     ./complete_deploy
 
 
@@ -44,10 +45,10 @@ By pressing the "Run" button in QtCreator the 'app' folder is automatically zipp
 Use this variant, if you made changes inside the folder 'app' only. You need a rooted device to be able to perform this deployment variant.
 The script removes the old files in the directory 'app' from the device and inserts the new ones instaed. There are two options to perform a fast deployment:
 
-#### Commandline
+Commandline:
     ./fast_deploy
 
-#### QtCreator
+QtCreator:
 You can add this script to
 
     QtCreator->Tools->External->Configure->Add->Add Tool
