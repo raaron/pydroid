@@ -1,28 +1,25 @@
 #!/usr/bin/python
 
-# Zipps files in the directory "app" and places the created archive in
-# android/res/raw
+# Zipps files in APP_DIR and places the created archive in android/res/raw
 
 import sys
 import os
 import zipfile
-import compileall
+
+from script_utils import PROJECT_DIR, APP_DIR, compile_app_directory
 
 
-# Python files are automatically included into the generated zipp archive.
+# Python files are automatically included into the generated zip archive.
 # Add additional files to include in the zip archive here
 NON_PYTHON_FILES = ["view.qml"]
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-
 ZIP_PATH = os.path.join(PROJECT_DIR, "android", "res", "raw", "app.zip")
-APP_DIR = os.path.join(PROJECT_DIR, 'app')
 
 
 def zip_app():
-    """Remove the old zip archive and create the new one from 'app'."""
+    """Remove the old zip archive and create the new one for APP_DIR."""
 
-    if not compileall.compile_dir(APP_DIR, maxlevels=100, quiet=True):
+    if not compile_app_directory():
         sys.exit(0)
 
     print "Removing old zip archive..."

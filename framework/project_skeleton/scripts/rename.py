@@ -1,13 +1,16 @@
 #!/usr/bin/python
 
+# Use this script if you want to rename your project. Manual renaming may leave
+# your project in an unstable state if you forget renaming in any location.
+
 import sys
 import os
 import re
 import shutil
 import ConfigParser
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-CONFIG_FILE = "project.conf"
+from script_utils import PROJECT_DIR
+from script_utils import get_app_name, get_package_name
 
 
 def python_sed(old_regex, new_regex, filename):
@@ -27,10 +30,8 @@ def rename_project(new_name, new_domain):
     the code accordingly.
     """
     new_package_name = '.'.join([new_domain, new_name])
-    conf = ConfigParser.ConfigParser()
-    conf.read(CONFIG_FILE)
-    old_name = conf.get("General", "app_name")
-    old_package_name = conf.get("General", "package_name")
+    old_name = get_app_name()
+    old_package_name = get_package_name()
 
     shutil.move("%s.pro" % old_name, "%s.pro" % new_name)
 
@@ -55,13 +56,19 @@ def rename_project(new_name, new_domain):
     except IOError:
         pass
 
+    # Build config path manually, because CONFIG_FILE from script_utils.py
+    # would still return the path to the old config file.
+    config_file = os.path.join(os.path.dirname(PROJECT_DIR), new_name,
+                               ".naming.conf")
+    conf = ConfigParser.ConfigParser()
+    conf.read(config_file)
     conf.set("General", "app_name", new_name)
     conf.set("General", "package_name", new_package_name)
-    with file(CONFIG_FILE, "w") as fobj:
+    with file(config_file, "w") as fobj:
         conf.write(fobj)
 
 
-def main(argv):
+def rename(argv):
     """
     Check if a new app name and the new domain were specified and whether the
     no directory with the new name already exists. If so, rename the project,
@@ -85,4 +92,4 @@ def main(argv):
             print "cd ../%s" % new_name
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    rename(sys.argv[1:])

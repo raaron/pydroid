@@ -1,36 +1,34 @@
 #!/usr/bin/python
 
+# Use this script if you already made an initial deployment and if you only
+# made changes inside the APP_DIR.
+
+# Compiles the current version of the PySide project in APP_DIR and inserts
+# the new files on the device. Files outside of APP_DIR remane unchanged.
+
 import sys
 import os
-import ConfigParser
 import subprocess
-import compileall
 
+# Insert the scripts path of the cwd at the beginning of sys.path to be
+# sure to import script_utils in cwd even if the called script is located in
+# pydroid/framework (e.g because it's an external tool for QtCreator).
+sys.path.insert(0, os.path.join(os.getcwd(), 'scripts'))
 
-PROJECT_DIR = os.getcwd()
-print PROJECT_DIR
-APP_DIR = os.path.join(PROJECT_DIR, 'app')
-CONFIG_FILE = os.path.join(PROJECT_DIR, "project.conf")
+from script_utils import APP_DIR, get_package_name, get_adb_path
+from script_utils import restart_app, compile_app_directory
 
-conf = ConfigParser.ConfigParser()
-conf.read(CONFIG_FILE)
-PACKAGE_NAME = conf.get("General", "package_name")
-ADB_PATH = conf.get("General", "adb_path")
 
 PUBLIC_ANDROID_DIR = "/sdcard"
-ANDROID_APP_DIR = "/data/data/%s/files/app/" % PACKAGE_NAME
-CMD_PREFIX = [ADB_PATH, "shell", "run-as", PACKAGE_NAME]
+ANDROID_APP_DIR = "/data/data/%s/files/app/" % get_package_name()
+CMD_PREFIX = [get_adb_path(), "shell", "run-as", get_package_name()]
 LS_CMD = CMD_PREFIX + ["ls", ANDROID_APP_DIR]
-START_APP_CMD = [ADB_PATH, "shell", "am", "start", "-n", "%s/org.kde.necessitas.origo.QtActivity" % PACKAGE_NAME]
-STOP_APP_CMD = [ADB_PATH, "shell", "am", "force-stop", PACKAGE_NAME]
-LOG_CMD = [ADB_PATH, "shell", "logcat"]
-CLEAR_LOG_CMD = LOG_CMD + ["-c"]
 
 
 def remove_old_files():
     """
-    Removes everything in the app from "/data/data/PACKAGE_NAME/files/" except of
-    the "python" library.
+    Removes "/data/data/PACKAGE_NAME/files/app", but not any other files
+    of the project.
     """
     p = subprocess.Popen(LS_CMD, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
@@ -50,7 +48,7 @@ def copy_files():
     Bytecompile all python source files, copy them together with the .qml files
     to the android device.
     """
-    if not compileall.compile_dir(APP_DIR, maxlevels=100, quiet=True):
+    if not compile_app_directory():
         sys.exit(0)
 
     root_len = len(os.path.abspath(APP_DIR))
@@ -60,7 +58,7 @@ def copy_files():
         for d in dirs:
             dest_dir = os.path.join(ANDROID_APP_DIR, archive_root, d)
             print "Making directory:", dest_dir
-            mkdir_cmd = [ADB_PATH, "shell", "su -c 'mkdir %s'" % dest_dir]
+            mkdir_cmd = [get_adb_path(), "shell", "su -c 'mkdir %s'" % dest_dir]
             subprocess.call(mkdir_cmd)
 
         for fn in files:
@@ -68,42 +66,22 @@ def copy_files():
                 src_path = os.path.join(root, fn)
                 dest_path = os.path.join(ANDROID_APP_DIR, archive_root, fn)
                 sd_card_fn = os.path.join(PUBLIC_ANDROID_DIR, archive_root, fn)
-                push_cmd = [ADB_PATH, "push", src_path, sd_card_fn]
+                push_cmd = [get_adb_path(), "push", src_path, sd_card_fn]
                 subprocess.call(push_cmd)
                 print "Copying:", src_path
-                cat_cmd = [ADB_PATH, "shell", "su -c 'cat %s > %s'" % (sd_card_fn, dest_path)]
+                cat_cmd = [get_adb_path(), "shell", "su -c 'cat %s > %s'" % (sd_card_fn, dest_path)]
                 subprocess.call(cat_cmd)
 
-    # root_len = len(os.path.abspath(LIB_DIR))
-    # for root, dirs, files in os.walk(LIB_DIR):
-    #     archive_root = os.path.abspath(root)[root_len:]
-    #     for f in files:
-    #         fullpath = os.path.join(root, f)
-    #         archive_name = os.path.join(archive_root, f)
-    #         zf.write(fullpath, archive_name)
 
-
-def restart_app():
-    """
-    Stop the app if an older version is still running.
-    Run the new version of the app on the device.
-    Output the logcat.
-    """
-    subprocess.call(STOP_APP_CMD)
-    subprocess.call(START_APP_CMD)
-    # subprocess.call(CLEAR_LOG_CMD)
-    # subprocess.call(LOG_CMD)
-
-
-def main():
+def fast_deploy(show_log=True):
     """
     Remove the old python and qml source files, copy the current files to
     the device, (re)start the app, show log output.
     """
     remove_old_files()
     copy_files()
-    restart_app()
+    restart_app(show_log)
 
 
 if __name__ == "__main__":
-    main()
+    fast_deploy(show_log=True)

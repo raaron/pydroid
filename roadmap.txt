@@ -14,8 +14,6 @@ Medium priority
 - get meego/QtComponents/Themes compiled
 - get meego/QtComponents/Themes available for Ubuntu (also in virtual machine)
 - unzip archives during application installation and not during the first start
-  or show a progress bar during first application start (modify main java
-  activity analogous to the ministro code for their progressbar)
 - option to generate either a full project with Qt Components or just a QML one
   (without Qt Components & theme)
 - specify the project icon
@@ -24,13 +22,7 @@ Medium priority
 - set what bindings to include (maybe based on android/values/libs.xml - this
   file lists all Qt Libs that would be requested from Ministro & actually used,
   no use to deploy bindings for libs that aren't there)
-- maybe even what Python modules to include ?
-- packaging from command-line without Qt Creator - basically just calling what
-  QtCreator calls when packaging
-  - would be very nice for automated build & publishing scripts or if multiple
-    architectures are needed
-  - could be combined with the archive generator & adb install to quickly test
-    both applications & library changes
+- let user configure which python standard modules to include in the lib
 - check Android integration
   - hardware buttons should probably be accessible through Necessitas Qt libs
   - the are some Python bindings for most of the Android stuff, like showing
@@ -48,7 +40,7 @@ Low priority
 - Check whether archives are removed on android device after unpacking them
   during the first application start
 - Tutorial:
-  - clarify the architecture differences during build
+  - clarify the architecture differences during build (armv5, armv7a)
   - add build instructions for Qt Components
 - arranging with the Ministro People to carry Python & Qt Components (Minstro
   was initially meant to be a general purpose library distribution tool it is

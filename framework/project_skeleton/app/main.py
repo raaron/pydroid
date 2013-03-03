@@ -40,7 +40,6 @@ def main():
     """
     os.chdir(APP_DIR)
     if android_util.is_on_android:
-        print("** Log for pydroid App **")
 
         # Redirect stdout and stderr to files on /sdcard/
         with open(STDOUT_PATH, 'w', 1) as fSock:
