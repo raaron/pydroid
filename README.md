@@ -24,7 +24,7 @@ There is a all-in-one-script for creating, deploying and running a "Hello world!
 
     ./hello
 
-And finally, there is a command to create a example application (the first parameter is the name of an example in the folder framework/examples):
+And finally, there is a command to create an example application (the first parameter is the name of an example in the folder framework/examples):
 
     ./create_example hello_world
 
