@@ -20,22 +20,24 @@ The created app is already deployable and shows a simple Hello world. The direct
 
 Then open the file my_project_name.pro in the Necessitas Qt Creator and deploy the app using the green deploy button.
 
-Additionally, there is a script for creating, deploying and running a "Hello world!" app with one single command (requires your system to be set up correctly, see "Set up your system" above):
+There is a all-in-one-script for creating, deploying and running a "Hello world!" app with one single command (requires your system to be set up correctly, see "Set up your system" above):
 
     ./hello
+
+And finally, there is a command to create a example application (the first parameter is the name of an example in the folder framework/examples):
+
+    ./create_example hello_world
 
 
 Deploying the project to the Android device
 -------------------------------------------
-After editing any file in the "app" directory, zipping this directory into android/res/raw is required before deploying the app to the device. This is automatically done when using Complete Deploy and Fast Deploy by the script scripts/zip_app.py. Additional files in the direcory "app" that also have to be zipped, have to be specified in this script.
-
 
 ### Complete Deployment (slow)
 Use this variant for the first deployment or if you made changes in any file outside of the folder 'app', e.g. in 'libs' by adding a new python package. There are two options to perform a complete deployment:
 
 QtCreator:
 
-By pressing the "Run" button in QtCreator the 'app' folder is automatically zipped. The complete project is then deployed to the device. This takes much more time than using the Fast Deploy.
+By pressing the "Run" button in QtCreator the entire project is deployed to the device. This takes much more time than using the "Fast Deployment".
 
 Commandline:
 
@@ -57,7 +59,7 @@ You can add this script to
 
     QtCreator->Tools->External->Configure->Add->Add Tool
 
-Browse to the executable located at pydroid/framework/project_skeleton/fast_deploy. Set the 'Working directory' to %{CurrentProject:Path}. You may then assign a keyboard shortcut (e.g. ctrl+h) to this tool via Tools->External->Options->Keyboard. Just type the first letters of fast_deploy to quickly find the created external tool.
+Browse to the executable located at pydroid/framework/project_skeleton/fast_deploy. Set the 'Working directory' to %{CurrentProject:Path}. You may then assign a keyboard shortcut (e.g. ctrl+h) to this tool via Tools->External->Options->Keyboard. Just type the first letters of "fast_deploy" to quickly find the created external tool.
 
 
 Rename a project
@@ -66,13 +68,20 @@ Rename a project
 Be sure, to use the "Complete Deployment" method for the next deployment!
 
 
-Add python packages
--------------------
-If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the following commands to install new packages into 'libs/python27' (zipping the new libs is done automatically with this command):
+Add additional libraries
+
+
+###Python packages (available via pip)
+If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the following commands to install new packages into 'libs/python27':
 
     ./pydroid_pip_install package_name
 
 Be sure, to use the "Complete Deployment" method for the next deployment!
+
+###Other libraries (located in framework/libs)
+The following command adds an additional library to your project (the specified library_name must be present in the folder "framework/libs"):
+
+    ./add_library library_name
 
 Logging
 -------

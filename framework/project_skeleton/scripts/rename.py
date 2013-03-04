@@ -9,8 +9,13 @@ import re
 import shutil
 import ConfigParser
 
-from script_utils import PROJECT_DIR
-from script_utils import get_app_name, get_package_name
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
+conf = ConfigParser.ConfigParser()
+conf.read(os.path.join(PROJECT_DIR, ".naming.conf"))
+OLD_APP_NAME = conf.get("General", "app_name")
+OLD_PACKAGE_NAME = conf.get("General", "package_name")
 
 
 def python_sed(old_regex, new_regex, filename):
@@ -30,28 +35,28 @@ def rename_project(new_name, new_domain):
     the code accordingly.
     """
     new_package_name = '.'.join([new_domain, new_name])
-    old_name = get_app_name()
-    old_package_name = get_package_name()
+    old_name = OLD_APP_NAME
+    old_package_name = OLD_PACKAGE_NAME
 
-    shutil.move("%s.pro" % old_name, "%s.pro" % new_name)
+    shutil.move("%s.pro" % OLD_APP_NAME, "%s.pro" % new_name)
 
     files = ["main.h",
              "android/src/org/kde/necessitas/origo/QtActivity.java",
              "android/AndroidManifest.xml"]
     for fn in files:
-        python_sed(old_package_name, new_package_name, fn)
+        python_sed(OLD_PACKAGE_NAME, new_package_name, fn)
 
     files = ["%s.pro" % new_name,
              "android/AndroidManifest.xml",
              "android/res/values/strings.xml",
              "android/build.xml"]
     for fn in files:
-        python_sed(old_name, new_name, fn)
+        python_sed(OLD_APP_NAME, new_name, fn)
 
     parent_dir = os.path.dirname(PROJECT_DIR)
 
     try:
-        shutil.move(os.path.join(parent_dir, old_name),
+        shutil.move(os.path.join(parent_dir, OLD_APP_NAME),
                     os.path.join(parent_dir, new_name))
     except IOError:
         pass

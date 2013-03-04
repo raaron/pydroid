@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
-# Installs a python package into 'libs/python27' using 'pip' and zips the
-# libs for deployment.
+# Installs a python package into 'libs/python27' using 'pip'.
 
 import sys
 from pip.index import PackageFinder
@@ -10,13 +9,11 @@ from pip.locations import build_prefix, src_prefix
 from pip.exceptions import DistributionNotFound
 
 from script_utils import PYTHON27_DIR
-import zip_libs
 
 
 def install(name):
     """
     Try to install the package with 'name' into folder 'libs/python27'.
-    Zip the all libs afterwards.
     """
     print "Installation directory:"
     print PYTHON27_DIR
@@ -43,8 +40,6 @@ def install(name):
         for package in requirement_set.successfully_installed:
             print package.name
         print "\nDone.\n"
-
-        zip_libs.zip_libs()
 
     except DistributionNotFound:
         print "No package found with name: %s" % name

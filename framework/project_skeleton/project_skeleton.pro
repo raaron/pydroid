@@ -11,10 +11,7 @@ SOURCES += main.cpp
 HEADERS  += \
     main.h
 OTHER_FILES += \
-    app/main.py \
-    app/view.py \
-    app/android_util.py \
-    app/view.qml \
+    app/* \
     android/src/org/kde/necessitas/ministro/IMinistro.aidl \
     android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
     android/src/org/kde/necessitas/origo/QtApplication.java \
@@ -54,6 +51,6 @@ OTHER_FILES += \
     android/AndroidManifest.xml
 
 # Define pre-build script
-mytarget.commands = python $$PWD/scripts/zip_app.py
+mytarget.commands = python $$PWD/scripts/qt_creator_prebuild_script.py
 QMAKE_EXTRA_TARGETS += mytarget
 PRE_TARGETDEPS += mytarget

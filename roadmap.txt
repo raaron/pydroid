@@ -1,5 +1,6 @@
 High priority
 =============
+- Remove temporary fast_deploy files from sdcard
 - Set up a virtual machine for virtualbox
 - Prepare a .apk and a sample project for Android 2.3.3 (API level 8 or 9)
 - Get information about arm version (armv5, armv6, armv7):

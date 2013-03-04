@@ -12,6 +12,7 @@ import os
 import subprocess
 
 import zip_app
+import zip_libs
 from script_utils import PROJECT_DIR
 from script_utils import get_app_name, get_package_name, get_adb_path
 from script_utils import get_necessitas_dir, get_arm_version, restart_app
@@ -103,6 +104,7 @@ def complete_deploy(show_log=True):
     Zip the PySide app, clean, build and deploy the project, then start it.
     """
     zip_app.zip_app()
+    zip_libs.zip_libs()
     export_environment_variables()
     build()
     deploy()

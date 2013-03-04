@@ -8,11 +8,6 @@ import zipfile
 
 from script_utils import PROJECT_DIR, APP_DIR, compile_app_directory
 
-
-# Python files are automatically included into the generated zip archive.
-# Add additional files to include in the zip archive here
-NON_PYTHON_FILES = ["view.qml"]
-
 ZIP_PATH = os.path.join(PROJECT_DIR, "android", "res", "raw", "app.zip")
 
 
@@ -35,9 +30,15 @@ def zip_app():
     zf = zipfile.PyZipFile(ZIP_PATH, mode='w')
     os.chdir(PROJECT_DIR)
     try:
-        zf.writepy('app', 'app')
-        for fn in NON_PYTHON_FILES:
-            zf.write(os.path.join(APP_DIR, fn), os.path.join('app', fn))
+        zf.writepy(APP_DIR, 'app')
+        root_len = len(PROJECT_DIR)
+        for root, dirs, files in os.walk(APP_DIR):
+            dir_path_from_root = root[root_len:]
+            for f in files:
+                if not (f.endswith('.py') or f.endswith('.pyc')):
+                    fullpath = os.path.join(root, f)
+                    archive_name = os.path.join(dir_path_from_root, f)
+                    zf.write(fullpath, archive_name)
     finally:
         zf.close()
 
