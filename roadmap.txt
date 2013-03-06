@@ -8,6 +8,7 @@ High priority
   - deployment for GooglePlay
   - Tutorial and list of devices/arm-version about configuring a project
 - Deploy a sample app on GooglePlay, include it in the tutorial
+- Implement a test_my_system script
 
 
 Medium priority
@@ -15,8 +16,7 @@ Medium priority
 - get meego/QtComponents/Themes compiled
 - get meego/QtComponents/Themes available for Ubuntu (also in virtual machine)
 - unzip archives during application installation and not during the first start
-- option to generate either a full project with Qt Components or just a QML one
-  (without Qt Components & theme)
+  (see: https://groups.google.com/forum/?fromgroups=#!topic/android-developers/XE2yhdguA4E)
 - specify the project icon
 - include third party binaries easily (eq. you give path to so file
   or executable and it gets deployed to files/bin (add it to PATH))
@@ -38,8 +38,6 @@ Medium priority
 Low priority
 ============
 - Blog about the project (e.g. planet python)
-- Check whether archives are removed on android device after unpacking them
-  during the first application start
 - Tutorial:
   - clarify the architecture differences during build (armv5, armv7a)
   - add build instructions for Qt Components
@@ -52,6 +50,7 @@ Low priority
 - migrating to Qt 5 once there are some working Python bindings are available
 - make the project available for other architectures (BB10, OSX, Windows8, etc)
   without the need of code change
+- Write a GUI client or Sublime plugin or QtCreator plugin
 
 
 
