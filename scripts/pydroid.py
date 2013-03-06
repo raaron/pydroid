@@ -5,11 +5,15 @@
 import sys
 import os
 import create_example
+import global_script_utils
 
 
-PYDROID_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-SKELETON_DIR = os.path.join(PYDROID_DIR, 'framework', 'project_skeleton')
-EXAMPLE_APP = 'hello_world'
+# Add local scripts of the project_skeleton to the path to import some
+sys.path.insert(0, global_script_utils.get_local_skeleton_scripts_dir())
+
+from path_utils import skeleton_dir
+
+EXAMPLE_NAME = 'hello_world'
 
 
 def pydroid(argv):
@@ -22,12 +26,12 @@ def pydroid(argv):
         print "Error: Invalid argument count: got %d instead of 2." % len(argv)
         print "Syntax: ./pydroid app_name domain"
         sys.exit(1)
-    elif not os.path.exists(SKELETON_DIR):
+    elif not os.path.exists(skeleton_dir()):
         print "Error: Could not find the template for creating the project."
-        print "Expected the template at:", SKELETON_DIR
+        print "Expected the template at:", skeleton_dir()
         sys.exit(1)
     else:
-        create_example.create_example_project(EXAMPLE_APP, argv[0], argv[1])
+        create_example.create_example_project(EXAMPLE_NAME, argv[0], argv[1])
 
 if __name__ == "__main__":
     # pydroid(["asdf", "foo.bar"])

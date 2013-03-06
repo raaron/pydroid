@@ -14,7 +14,7 @@ DOMAIN = "com.example"
 PYDROID_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
-def hello_world(show_log=True):
+def hello_world(show_log=False):
     """
     Remove the previous project if any. Create, deploy and run the new one.
     """
@@ -39,4 +39,4 @@ def hello_world(show_log=True):
 
 
 if __name__ == "__main__":
-    hello_world(show_log=True)
+    hello_world(show_log=False)

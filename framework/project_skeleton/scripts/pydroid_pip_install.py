@@ -8,7 +8,7 @@ from pip.req import InstallRequirement, RequirementSet
 from pip.locations import build_prefix, src_prefix
 from pip.exceptions import DistributionNotFound
 
-from script_utils import PYTHON27_DIR
+from path_utils import python27_dir
 
 
 def install(name):
@@ -16,7 +16,7 @@ def install(name):
     Try to install the package with 'name' into folder 'libs/python27'.
     """
     print "Installation directory:"
-    print PYTHON27_DIR
+    print python27_dir()
 
     requirement_set = RequirementSet(build_dir=build_prefix,
                                      src_dir=src_prefix,
@@ -24,7 +24,7 @@ def install(name):
 
     requirement_set.add_requirement(InstallRequirement.from_line(name, None))
 
-    install_options = ["--prefix=%s" % PYTHON27_DIR]
+    install_options = ["--prefix=%s" % python27_dir()]
     global_options = []
     finder = PackageFinder(find_links=[],
                            index_urls=["http://pypi.python.org/simple/"])

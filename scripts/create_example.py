@@ -8,13 +8,20 @@ import json
 import shutil
 import ConfigParser
 
+import global_script_utils
+
 
 DOMAIN = "com.example"
 APP_NAME_SUFFIX = "_example"
-PYDROID_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-EXAMPLE_DIR = os.path.join(PYDROID_DIR, 'framework', 'examples')
-SKELETON_DIR = os.path.join(PYDROID_DIR, 'framework', 'project_skeleton')
-CONFIG_FILE = os.path.join(EXAMPLE_DIR, 'examples.conf')
+
+# Add local scripts of the project_skeleton to the path to import some
+sys.path.insert(0, global_script_utils.get_local_skeleton_scripts_dir())
+
+from path_utils import examples_dir, skeleton_dir, examples_config_file
+from path_utils import pydroid_dir
+from script_utils import reload_local_scripts
+import rename
+import add_library
 
 
 def setup_project(app_name, domain, override_existing=False):
@@ -22,8 +29,7 @@ def setup_project(app_name, domain, override_existing=False):
     Create a new project with name 'app_name' from the skeleton project.
     Returns True if the project could have been created successfully.
     """
-
-    dst = os.path.join(PYDROID_DIR, app_name)
+    dst = os.path.join(pydroid_dir(), app_name)
     if override_existing:
         try:
             shutil.rmtree(dst)
@@ -34,10 +40,12 @@ def setup_project(app_name, domain, override_existing=False):
         print "A directory with name %s already exists." % app_name
         return False
     else:
-        shutil.copytree(SKELETON_DIR, dst, symlinks=True)
+        shutil.copytree(skeleton_dir(), dst, symlinks=True)
         os.chdir(dst)
-        sys.path.insert(0, 'scripts')
-        import rename
+
+        # Load the local scripts of the created project
+        reload_local_scripts(skeleton_dir(), dst)
+
         rename.rename_project(app_name, domain)
         return True
 
@@ -48,19 +56,18 @@ def create_example_project(example_name, app_name, domain, override_existing=Fal
     'app_name' for it.
     """
     # Create the project
-    project_dir = os.path.join(PYDROID_DIR, app_name)
+    project_dir = os.path.join(pydroid_dir(), app_name)
     if setup_project(app_name, domain, override_existing):
 
         # Insert the sample app
-        src_dir = os.path.join(EXAMPLE_DIR, example_name)
+        src_dir = os.path.join(examples_dir(), example_name)
         dst_dir = os.path.join(project_dir, 'app')
         shutil.copytree(src_dir, dst_dir, symlinks=True)
 
         # Add needed libraries
         conf = ConfigParser.ConfigParser()
-        conf.read(CONFIG_FILE)
+        conf.read(examples_config_file())
         libs = json.loads(conf.get(example_name, 'libs'))
-        import add_library
         for lib in libs:
             add_library.add_library_to_project(lib)
 
@@ -83,5 +90,5 @@ if __name__ == "__main__":
     # create_example_project(example_name='qt_components',
     #                        app_name='qt_components' + APP_NAME_SUFFIX,
     #                        domain=DOMAIN,
-    #                        override_existing=False)
+    #                        override_existing=True)
     create_example(sys.argv[1:])

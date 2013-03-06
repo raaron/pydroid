@@ -6,9 +6,7 @@
 import os
 import zipfile
 
-from script_utils import PROJECT_DIR, LIBS_DIR
-
-ZIP_PATH = os.path.join(PROJECT_DIR, "android", "res", "raw", "libs.zip")
+from path_utils import project_dir, project_libs_dir, libs_zip_file
 
 
 def zip_libs():
@@ -17,17 +15,17 @@ def zip_libs():
     print "Removing old zip archive..."
     print
     try:
-        os.remove(ZIP_PATH)
+        os.remove(libs_zip_file())
     except OSError:
         pass
 
     print "Creating new zip archive at:"
-    print ZIP_PATH
+    print libs_zip_file()
 
-    zf = zipfile.ZipFile(ZIP_PATH, mode='w')
+    zf = zipfile.ZipFile(libs_zip_file(), mode='w')
     try:
-        root_len = len(PROJECT_DIR)
-        for root, dirs, files in os.walk(LIBS_DIR):
+        root_len = len(project_dir())
+        for root, dirs, files in os.walk(project_libs_dir()):
             dir_path_from_root = root[root_len:]
             for f in files:
                 fullpath = os.path.join(root, f)

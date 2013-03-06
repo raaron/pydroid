@@ -7,20 +7,22 @@ import os
 import shutil
 import ConfigParser
 
-from script_utils import PYDROID_DIR, PROJECT_DIR
+# print os.path.dirname(__file__) in sys.path
+# print os.listdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(os.path.dirname(__file__)))
+# print os.getcwd()
+# print sys.path
 
-
-FRAMEWORK_LIBS_DIR = os.path.join(PYDROID_DIR, 'framework', 'libs')
-CONFIG_FILE = os.path.join(FRAMEWORK_LIBS_DIR, 'libs.conf')
+from path_utils import *
 
 
 def add_library_to_project(lib_name):
     """Check if this library exists and if so, add it to the project."""
 
     conf = ConfigParser.ConfigParser()
-    conf.read(CONFIG_FILE)
-    src_dir = os.path.join(FRAMEWORK_LIBS_DIR, lib_name)
-    dst_dir = os.path.join(PROJECT_DIR, conf.get('libs', lib_name), lib_name)
+    conf.read(libs_config_file())
+    src_dir = os.path.join(framework_libs_dir(), lib_name)
+    dst_dir = os.path.join(project_dir(), conf.get('libs', lib_name), lib_name)
     if os.path.exists(dst_dir):
         print "Error: The destination directory for the library already exists:"
         print dst_dir

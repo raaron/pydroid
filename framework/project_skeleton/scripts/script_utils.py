@@ -1,39 +1,11 @@
-# Constants and helpers for scripting.
+# Helpers for scripting.
 
 import sys
 import os
 import subprocess
 import compileall
-import ConfigParser
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-PYDROID_DIR = os.path.dirname(PROJECT_DIR)
-APP_DIR = os.path.join(PROJECT_DIR, 'app')
-LIBS_DIR = os.path.join(PROJECT_DIR, 'libs')
-PYTHON27_DIR = os.path.join(LIBS_DIR, 'python27')
-COMPILING_CONFIG_FILE = os.path.join(PROJECT_DIR, "project.conf")
-NAMING_CONFIG_FILE = os.path.join(PROJECT_DIR, ".naming.conf")
-
-
-def get_app_name():
-    return __get_from_config("General", "app_name", NAMING_CONFIG_FILE)
-
-
-def get_package_name():
-    return __get_from_config("General", "package_name", NAMING_CONFIG_FILE)
-
-
-def get_adb_path():
-    return __get_from_config("Compiling", "adb_path", COMPILING_CONFIG_FILE)
-
-
-def get_arm_version():
-    return __get_from_config("Compiling", "arm_version", COMPILING_CONFIG_FILE)
-
-
-def get_necessitas_dir():
-    return __get_from_config("Compiling", "necessitas_dir",
-                             COMPILING_CONFIG_FILE)
+from path_utils import adb_path, package_name, app_dir
 
 
 def restart_app(show_log=False):
@@ -41,14 +13,14 @@ def restart_app(show_log=False):
     Restart the app with the current version.
     Show logcat output if 'show_log' is true.
     """
-    stop_cmd = [get_adb_path(), "shell", "am", "force-stop", get_package_name()]
-    start_cmd = [get_adb_path(), "shell", "am", "start", "-n",
-                 "%s/org.kde.necessitas.origo.QtActivity" % get_package_name()]
+    stop_cmd = [adb_path(), "shell", "am", "force-stop", package_name()]
+    start_cmd = [adb_path(), "shell", "am", "start", "-n",
+                 "%s/org.kde.necessitas.origo.QtActivity" % package_name()]
 
     subprocess.call(stop_cmd)
     subprocess.call(start_cmd)
     if show_log:
-        log_cmd = [get_adb_path(), "shell", "logcat"]
+        log_cmd = [adb_path(), "shell", "logcat"]
         clear_log_cmd = log_cmd + ["-c"]
         try:
             subprocess.call(clear_log_cmd)
@@ -62,12 +34,37 @@ def compile_app_directory():
     Bytecompile all python source files located in APP_DIR.
     Returns 1 if there were no errors, otherwise 0.
     """
-    return compileall.compile_dir(APP_DIR, maxlevels=100, quiet=True)
+    return compileall.compile_dir(app_dir(), maxlevels=100, quiet=True)
 
 
-def __get_from_config(section, name, config_file):
-    """Return this entry from the config file."""
+def reload_local_scripts(old_project_dir, new_project_dir):
+    """
+    Reloads the local scripts of 'new_project_dir' instead of the already
+    loaded local scripts of 'old_project_dir'.
+    """
+    __replace_sys_path(old_project_dir, new_project_dir)
+    __reload_sys_modules(new_project_dir)
 
-    conf = ConfigParser.ConfigParser()
-    conf.read(config_file)
-    return conf.get(section, name)
+
+def __replace_sys_path(old_project_dir, new_project_dir):
+    """
+    Replaces the prefix of all paths in sys.path beginning with
+    'old_project_dir' by 'new_project_dir'.
+    """
+    for i in xrange(len(sys.path)):
+        if sys.path[i].startswith(old_project_dir):
+            sys.path[i] = sys.path[i].replace(old_project_dir, new_project_dir)
+
+
+def __reload_sys_modules(new_project_dir):
+    """Tries to reload all loaded local scripts in sys.modules."""
+
+    new_local_scripts_dir = os.path.join(new_project_dir, 'scripts')
+    to_reload = set([n.split('.')[0] for n in os.listdir(new_local_scripts_dir)])
+
+    for name, module in sys.modules.iteritems():
+        if name in to_reload:
+            try:
+                reload(module)
+            except:
+                pass

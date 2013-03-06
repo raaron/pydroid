@@ -9,13 +9,9 @@ import re
 import shutil
 import ConfigParser
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-
-
-conf = ConfigParser.ConfigParser()
-conf.read(os.path.join(PROJECT_DIR, ".naming.conf"))
-OLD_APP_NAME = conf.get("General", "app_name")
-OLD_PACKAGE_NAME = conf.get("General", "package_name")
+from path_utils import pydroid_dir, project_dir, app_name, package_name
+from path_utils import naming_config_file
+from script_utils import reload_local_scripts
 
 
 def python_sed(old_regex, new_regex, filename):
@@ -34,42 +30,35 @@ def rename_project(new_name, new_domain):
     Renames all directories and files to the new name and domain and adapts
     the code accordingly.
     """
+    old_project_dir = project_dir()
+    new_project_dir = os.path.join(pydroid_dir(), new_name)
     new_package_name = '.'.join([new_domain, new_name])
-    old_name = OLD_APP_NAME
-    old_package_name = OLD_PACKAGE_NAME
 
-    shutil.move("%s.pro" % OLD_APP_NAME, "%s.pro" % new_name)
+    shutil.move("%s.pro" % app_name(), "%s.pro" % new_name)
 
     files = ["main.h",
              "android/src/org/kde/necessitas/origo/QtActivity.java",
              "android/AndroidManifest.xml"]
     for fn in files:
-        python_sed(OLD_PACKAGE_NAME, new_package_name, fn)
+        python_sed(package_name(), new_package_name, fn)
 
     files = ["%s.pro" % new_name,
              "android/AndroidManifest.xml",
              "android/res/values/strings.xml",
              "android/build.xml"]
     for fn in files:
-        python_sed(OLD_APP_NAME, new_name, fn)
+        python_sed(app_name(), new_name, fn)
 
-    parent_dir = os.path.dirname(PROJECT_DIR)
+    shutil.move(old_project_dir, new_project_dir)
 
-    try:
-        shutil.move(os.path.join(parent_dir, OLD_APP_NAME),
-                    os.path.join(parent_dir, new_name))
-    except IOError:
-        pass
+    # Load the local scripts of the renamed project
+    reload_local_scripts(old_project_dir, new_project_dir)
 
-    # Build config path manually, because CONFIG_FILE from script_utils.py
-    # would still return the path to the old config file.
-    config_file = os.path.join(os.path.dirname(PROJECT_DIR), new_name,
-                               ".naming.conf")
     conf = ConfigParser.ConfigParser()
-    conf.read(config_file)
+    conf.read(naming_config_file())
     conf.set("General", "app_name", new_name)
     conf.set("General", "package_name", new_package_name)
-    with file(config_file, "w") as fobj:
+    with file(naming_config_file(), "w") as fobj:
         conf.write(fobj)
 
 
@@ -86,7 +75,7 @@ def rename(argv):
         sys.exit(1)
     else:
         new_name, new_domain = argv
-        new_project_dir = os.path.join(os.path.dirname(PROJECT_DIR), new_name)
+        new_project_dir = os.path.join(pydroid_dir(), new_name)
         if os.path.exists(new_project_dir):
             print "Error: A directory with name %s already exists." % new_name
             sys.exit(1)

@@ -6,9 +6,8 @@ import sys
 import os
 import zipfile
 
-from script_utils import PROJECT_DIR, APP_DIR, compile_app_directory
-
-ZIP_PATH = os.path.join(PROJECT_DIR, "android", "res", "raw", "app.zip")
+from script_utils import compile_app_directory
+from path_utils import project_dir, app_dir, app_zip_file
 
 
 def zip_app():
@@ -20,19 +19,19 @@ def zip_app():
     print "Removing old zip archive..."
     print
     try:
-        os.remove(ZIP_PATH)
+        os.remove(app_zip_file())
     except OSError:
         pass
 
     print "Creating new zip archive at:"
-    print ZIP_PATH
+    print app_zip_file()
 
-    zf = zipfile.PyZipFile(ZIP_PATH, mode='w')
-    os.chdir(PROJECT_DIR)
+    zf = zipfile.PyZipFile(app_zip_file(), mode='w')
+    os.chdir(project_dir())
     try:
-        zf.writepy(APP_DIR, 'app')
-        root_len = len(PROJECT_DIR)
-        for root, dirs, files in os.walk(APP_DIR):
+        zf.writepy(app_dir(), 'app')
+        root_len = len(project_dir())
+        for root, dirs, files in os.walk(app_dir()):
             dir_path_from_root = root[root_len:]
             for f in files:
                 if not (f.endswith('.py') or f.endswith('.pyc')):

@@ -13,21 +13,9 @@ import subprocess
 
 import zip_app
 import zip_libs
-from script_utils import PROJECT_DIR
-from script_utils import get_app_name, get_package_name, get_adb_path
-from script_utils import get_necessitas_dir, get_arm_version, restart_app
 
-QT_482_DIR = os.path.join(get_necessitas_dir(), "Android", "Qt", "482")
-QMAKE_PATH = os.path.join(QT_482_DIR, "armeabi-%s" % get_arm_version(),
-                          "bin", "qmake")
-
-PRO_FILE = os.path.join(PROJECT_DIR, "%s.pro" % get_app_name())
-BUILD_DIR = os.path.join(PROJECT_DIR, "build")
-INSTALL_ROOT = os.path.join(PROJECT_DIR, "android")
-NECESSITAS_QT_DIR = os.path.join(get_necessitas_dir(), "QtCreator", "Qt")
-QT_PLUGIN_DIR = os.path.join(NECESSITAS_QT_DIR, "plugins")
-SDK_DIR = os.path.join(get_necessitas_dir(), "android-sdk")
-APK_PATH = os.path.join(INSTALL_ROOT, "bin", "%s-debug.apk" % get_app_name())
+from path_utils import *
+from script_utils import restart_app
 
 
 def export_environment_variables():
@@ -35,22 +23,28 @@ def export_environment_variables():
 
     os.environ["ANDROID_NDK_HOST"] = "linux-x86"
     os.environ["ANDROID_NDK_PLATFORM"] = "android-14"
-    os.environ["ANDROID_NDK_ROOT"] = os.path.join(get_necessitas_dir(),
+    os.environ["ANDROID_NDK_ROOT"] = os.path.join(necessitas_dir(),
                                                   "android-ndk")
 
     os.environ["ANDROID_NDK_TOOLCHAIN_PREFIX"] = "arm-linux-androideabi"
     os.environ["ANDROID_NDK_TOOLCHAIN_VERSION"] = "4.4.3"
     os.environ["ANDROID_NDK_TOOLS_PREFI"] = "arm-linux-androideabi"
-    os.environ["ANDROID_HOME"] = SDK_DIR
-    os.environ["QT_IMPORT_PATH"] = os.path.join(NECESSITAS_QT_DIR, "imports")
-    os.environ["QTDIR"] = os.path.join(QT_482_DIR, "armeabi")
-    os.environ["LD_LIBRARY_PATH"] = os.path.join(NECESSITAS_QT_DIR, "lib")
+    os.environ["ANDROID_HOME"] = necessitas_sdk_dir()
+    os.environ["QT_IMPORT_PATH"] = os.path.join(necessitas_qtcreator_qt_dir(),
+                                                "imports")
 
-    os.environ["QT_PLUGIN_PATH"] = QT_PLUGIN_DIR
+    os.environ["QTDIR"] = os.path.join(necessitas_android_qt_482_dir(),
+                                       "armeabi")
+
+    os.environ["LD_LIBRARY_PATH"] = os.path.join(necessitas_qtcreator_qt_dir(),
+                                                 "lib")
+
+    os.environ["QT_PLUGIN_PATH"] = necessitas_qtcreator_qt_plugin_dir()
     if "QT_PLUGIN_PATH" in os.environ:
         os.environ["QT_PLUGIN_PATH"] += ":%s" % os.environ["QT_PLUGIN_PATH"]
 
-    os.environ["PATH"] = "%s:%s:%s" % (os.path.join(SDK_DIR, "platform-tools"),
+    os.environ["PATH"] = "%s:%s:%s" % (os.path.join(necessitas_sdk_dir(),
+                                                    "platform-tools"),
                                        os.path.join(os.environ["QTDIR"],
                                                     "bin"),
                                        os.environ["PATH"])
@@ -59,11 +53,11 @@ def export_environment_variables():
 def build():
     """Clean and build the project."""
 
-    os.chdir(PROJECT_DIR)
+    os.chdir(project_dir())
 
     print "** creating build directory"
     try:
-        os.mkdir(BUILD_DIR)
+        os.mkdir(build_dir())
     except OSError:
         pass
 
@@ -71,21 +65,22 @@ def build():
     subprocess.call(["make", "clean", "-w"])
 
     print "** switching to build dir"
-    os.chdir(BUILD_DIR)
+    os.chdir(build_dir())
 
     print "** running qmake"
-    subprocess.call([QMAKE_PATH, PRO_FILE, "-r", "-spec", "android-g++", "-o",
-                     "Makefile", PRO_FILE])
+    subprocess.call([necessitas_qmake_path(), qtcreator_config_file(), "-r",
+                     "-spec", "android-g++", "-o",
+                     "Makefile", qtcreator_config_file()])
 
     print "** processing makefile"
     subprocess.call(["make", "-w"])
 
     print "** installing results"
-    subprocess.call(["make", "INSTALL_ROOT=%s" % INSTALL_ROOT,
+    subprocess.call(["make", "INSTALL_ROOT=%s" % android_dir(),
                      "install", "-w"])
 
-    print "** switching to %s" % INSTALL_ROOT
-    os.chdir(INSTALL_ROOT)
+    print "** switching to %s" % android_dir()
+    os.chdir(android_dir())
 
     print "** building the APK"
     subprocess.call(["ant", "clean", "debug"])
@@ -95,11 +90,11 @@ def deploy():
     """Deploy the app to the device."""
 
     print "** deploying APK"
-    subprocess.call([get_adb_path(), "uninstall", get_package_name()])
-    subprocess.call([get_adb_path(), "install", APK_PATH])
+    subprocess.call([adb_path(), "uninstall", package_name()])
+    subprocess.call([adb_path(), "install", apk_file()])
 
 
-def complete_deploy(show_log=True):
+def complete_deploy(show_log=False):
     """
     Zip the PySide app, clean, build and deploy the project, then start it.
     """
@@ -112,4 +107,4 @@ def complete_deploy(show_log=True):
 
 
 if __name__ == "__main__":
-    complete_deploy(show_log=True)
+    complete_deploy(show_log=False)

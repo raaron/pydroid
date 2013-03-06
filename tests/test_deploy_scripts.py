@@ -1,0 +1,154 @@
+import unittest
+import sys
+import os
+import time
+import subprocess
+
+import test_utils
+
+# Add local scripts of the project_skeleton to the path to import some
+sys.path.insert(0, test_utils.get_local_skeleton_scripts_dir())
+
+from path_utils import *
+import complete_deploy
+import fast_deploy
+
+# Add global scripts of the project_skeleton to the path to import some
+sys.path.insert(0, global_scripts_dir())
+
+import hello_world
+import pydroid
+
+
+APP_NAME = "hello_world"
+DOMAIN = "com.example"
+PACKAGE_NAME = "%s.%s" % (DOMAIN, APP_NAME)
+PROJECT_DIR = os.path.join(pydroid_dir(), APP_NAME)
+
+
+class TestHelloWorldDeployScripts(unittest.TestCase):
+    """Test cases for 'hello_world.py' scripts."""
+
+    @classmethod
+    def tearDownClass(cls):
+        """Finally clean up the test project."""
+
+        test_utils.remove_directories_if_exist([PROJECT_DIR])
+
+    def setUp(self):
+        """
+        Explicitly remove previous test projects, to be sure a new one is
+        created.
+        """
+        test_utils.reload_local_skeleton_scripts()
+        test_utils.stop_app(PACKAGE_NAME)
+        self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
+        test_utils.remove_directories_if_exist([PROJECT_DIR])
+        self.assertFalse(os.path.exists(PROJECT_DIR))
+
+    def tearDown(self):
+        self.assertTrue(os.path.exists(PROJECT_DIR))
+
+        # Wait for termination of the app installation before checking
+        time.sleep(6)
+        self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
+        test_utils.stop_app(PACKAGE_NAME)
+
+    def test_hello_cmd_line(self):
+        """
+        Test creating, deploying and running a new hello world project
+        from the commandline.
+        """
+        cmd = [os.path.join(pydroid_dir(), "hello")]
+        subprocess.call(cmd)
+
+    def test_hello_python_api(self):
+        """
+        Test creating, deploying and running a new hello world project
+        via python api.
+        """
+        hello_world.hello_world(show_log=False)
+
+
+class TestCompleteDeployScripts(unittest.TestCase):
+    """Test cases for 'complete_deploy.py' scripts."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up a new project."""
+        test_utils.reload_local_skeleton_scripts()
+        test_utils.stop_app(PACKAGE_NAME)
+        test_utils.remove_directories_if_exist([PROJECT_DIR])
+        pydroid.pydroid([APP_NAME, DOMAIN])
+
+    @classmethod
+    def tearDownClass(cls):
+        """Finally clean up the test project."""
+
+        test_utils.remove_directories_if_exist([PROJECT_DIR])
+
+    def setUp(self):
+        self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
+
+    def tearDown(self):
+        # Wait for termination of the app installation before checking
+        time.sleep(6)
+        self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
+        test_utils.stop_app(PACKAGE_NAME)
+
+    def test_complete_deploy_cmd_line(self):
+        """Test deploying and running the test project from the commandline."""
+
+        cmd = [os.path.join(PROJECT_DIR, "complete_deploy")]
+        subprocess.call(cmd)
+
+    def test_complete_deploy_python_api(self):
+        """
+        Test creating, deploying and running a new hello world project
+        via python api.
+        """
+        complete_deploy.complete_deploy(show_log=False)
+
+
+class TestFastDeployScript(unittest.TestCase):
+    """Test cases for fast_deploy.py script."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Create a new test project and install and run it properly."""
+
+        test_utils.reload_local_skeleton_scripts()
+        test_utils.stop_app(PACKAGE_NAME)
+        hello_world.hello_world(show_log=False)
+
+        # Wait for termination of the app installation before doing fast deploys.
+        time.sleep(6)
+        test_utils.stop_app(PACKAGE_NAME)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Clean up the test project."""
+
+        test_utils.remove_directories_if_exist([PROJECT_DIR])
+
+    def setUp(self):
+        self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
+
+    def tearDown(self):
+        self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
+        test_utils.stop_app(PACKAGE_NAME)
+
+    def test_fast_deploy_cmd_line(self):
+        """Test the fast deployment method from command line."""
+
+        cmd = [os.path.join(PROJECT_DIR, "fast_deploy")]
+        subprocess.call(cmd)
+
+    def test_fast_deploy_python_api(self):
+        """Test the fast deployment method via python api."""
+
+        fast_deploy.fast_deploy(show_log=False)
+
+
+if __name__ == '__main__':
+    unittest.main()
