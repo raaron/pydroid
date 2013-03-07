@@ -6,41 +6,29 @@ import subprocess
 
 import test_utils
 
-# Add local scripts of the project_skeleton to the path to import some
-sys.path.insert(0, test_utils.get_local_skeleton_scripts_dir())
+sys.path.insert(0, os.pardir)
 
+import hello_world
+import create_app
 from path_utils import *
 import complete_deploy
 import fast_deploy
-
-# Add global scripts of the project_skeleton to the path to import some
-sys.path.insert(0, global_scripts_dir())
-
-import hello_world
-import pydroid
 
 
 APP_NAME = "hello_world"
 DOMAIN = "com.example"
 PACKAGE_NAME = "%s.%s" % (DOMAIN, APP_NAME)
-PROJECT_DIR = os.path.join(pydroid_dir(), APP_NAME)
+PROJECT_DIR = os.path.join(tests_dir(), APP_NAME)
 
 
 class TestHelloWorldDeployScripts(unittest.TestCase):
     """Test cases for 'hello_world.py' scripts."""
-
-    @classmethod
-    def tearDownClass(cls):
-        """Finally clean up the test project."""
-
-        test_utils.remove_directories_if_exist([PROJECT_DIR])
 
     def setUp(self):
         """
         Explicitly remove previous test projects, to be sure a new one is
         created.
         """
-        test_utils.reload_local_skeleton_scripts()
         test_utils.stop_app(PACKAGE_NAME)
         self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
         test_utils.remove_directories_if_exist([PROJECT_DIR])
@@ -53,13 +41,14 @@ class TestHelloWorldDeployScripts(unittest.TestCase):
         time.sleep(6)
         self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
         test_utils.stop_app(PACKAGE_NAME)
+        test_utils.remove_directories_if_exist([PROJECT_DIR])
 
     def test_hello_cmd_line(self):
         """
         Test creating, deploying and running a new hello world project
         from the commandline.
         """
-        cmd = [os.path.join(pydroid_dir(), "hello")]
+        cmd = ['python', os.path.join(pydroid_dir(), "hello_world.py")]
         subprocess.call(cmd)
 
     def test_hello_python_api(self):
@@ -76,10 +65,9 @@ class TestCompleteDeployScripts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up a new project."""
-        test_utils.reload_local_skeleton_scripts()
         test_utils.stop_app(PACKAGE_NAME)
         test_utils.remove_directories_if_exist([PROJECT_DIR])
-        pydroid.pydroid([APP_NAME, DOMAIN])
+        create_app.create_app([APP_NAME, DOMAIN])
 
     @classmethod
     def tearDownClass(cls):
@@ -99,7 +87,7 @@ class TestCompleteDeployScripts(unittest.TestCase):
     def test_complete_deploy_cmd_line(self):
         """Test deploying and running the test project from the commandline."""
 
-        cmd = [os.path.join(PROJECT_DIR, "complete_deploy")]
+        cmd = ['python', os.path.join(pydroid_dir(), "complete_deploy.py")]
         subprocess.call(cmd)
 
     def test_complete_deploy_python_api(self):
@@ -117,7 +105,6 @@ class TestFastDeployScript(unittest.TestCase):
     def setUpClass(cls):
         """Create a new test project and install and run it properly."""
 
-        test_utils.reload_local_skeleton_scripts()
         test_utils.stop_app(PACKAGE_NAME)
         hello_world.hello_world(show_log=False)
 
@@ -135,13 +122,17 @@ class TestFastDeployScript(unittest.TestCase):
         self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
 
     def tearDown(self):
+
+        # Wait until the app was started successful
+        time.sleep(6)
+
         self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
         test_utils.stop_app(PACKAGE_NAME)
 
     def test_fast_deploy_cmd_line(self):
         """Test the fast deployment method from command line."""
 
-        cmd = [os.path.join(PROJECT_DIR, "fast_deploy")]
+        cmd = ['python', os.path.join(pydroid_dir(), "fast_deploy.py")]
         subprocess.call(cmd)
 
     def test_fast_deploy_python_api(self):

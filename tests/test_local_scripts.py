@@ -6,9 +6,9 @@ import ConfigParser
 
 import test_utils
 
-# Add local scripts of the project_skeleton to the path to import some
-sys.path.insert(0, test_utils.get_local_skeleton_scripts_dir())
+sys.path.insert(0, os.pardir)
 
+import create_app
 from path_utils import *
 import rename
 import zip_app
@@ -18,36 +18,34 @@ import pydroid_pip_install
 import check_system
 import status
 
-# Add global scripts of the project_skeleton to the path to import some
-sys.path.insert(0, global_scripts_dir())
-
-import pydroid
-
 
 APP_NAME = "hello_world"
 DOMAIN = 'hello.world'
+PROJECT_DIR = os.path.join(tests_dir(), APP_NAME)
 
 NEW_APP_NAME = 'new_project_name'
 NEW_DOMAIN = 'new.project.name'
-RENAMED_PROJECT_DIR = os.path.join(pydroid_dir(), NEW_APP_NAME)
+RENAMED_PROJECT_DIR = os.path.join(tests_dir(), NEW_APP_NAME)
 
 
 class TestLocalScripts(unittest.TestCase):
 
     def setUp(self):
-        test_utils.reload_local_skeleton_scripts()
-
-        old_project_dir = os.path.join(pydroid_dir(), APP_NAME)
-
-        test_utils.remove_directories_if_exist([old_project_dir,
+        os.chdir(tests_dir())
+        test_utils.remove_directories_if_exist([PROJECT_DIR,
                                                 RENAMED_PROJECT_DIR])
 
-        pydroid.pydroid([APP_NAME, DOMAIN])
-        self.assertTrue(os.path.exists(os.path.join(pydroid_dir(), APP_NAME)))
+        create_app.create_app([APP_NAME, DOMAIN])
+        self.assertTrue(os.path.exists(PROJECT_DIR))
         os.chdir(project_dir())
 
         self.conf = ConfigParser.ConfigParser()
         self.conf.read(libs_config_file())
+
+    @classmethod
+    def tearDownClass(cls):
+        test_utils.remove_directories_if_exist([PROJECT_DIR,
+                                                RENAMED_PROJECT_DIR])
 
     def test_libs_config(self):
         """
@@ -61,7 +59,9 @@ class TestLocalScripts(unittest.TestCase):
         """Test adding a library to the project from the commandline."""
 
         lib_name = self.conf.options('libs')[0]
-        cmd = [os.path.join(project_dir(), "add_library"), lib_name]
+        cmd = ['python', os.path.join(pydroid_dir(), "add_library.py"),
+               lib_name]
+
         subprocess.call(cmd)
         self.assertTrue(os.path.exists(os.path.join(project_libs_dir(),
                                                     lib_name)))
@@ -77,7 +77,9 @@ class TestLocalScripts(unittest.TestCase):
     def test_rename_cmd_line(self):
         """Test renaming a project from the commandline."""
 
-        cmd = [os.path.join(project_dir(), "rename"), NEW_APP_NAME, NEW_DOMAIN]
+        cmd = ['python', os.path.join(pydroid_dir(), "rename.py"),
+               NEW_APP_NAME, NEW_DOMAIN]
+
         subprocess.call(cmd)
         self.assertTrue(os.path.exists(RENAMED_PROJECT_DIR))
 
@@ -96,8 +98,7 @@ class TestLocalScripts(unittest.TestCase):
             self.assertFalse(os.path.exists(d))
 
         cmd = ['python',
-               os.path.join(local_scripts_dir(),
-                            'qt_creator_prebuild_script.py')]
+               os.path.join(pydroid_dir(), 'qt_creator_prebuild_script.py')]
 
         subprocess.call(cmd)
 
@@ -110,7 +111,9 @@ class TestLocalScripts(unittest.TestCase):
         module_name = 'simplekv'
         package_dir = os.path.join(site_packages_dir(), module_name)
         self.assertFalse(os.path.exists(package_dir))
-        cmd = [os.path.join(project_dir(), "pydroid_pip_install"), module_name]
+        cmd = ['python', os.path.join(pydroid_dir(), "pydroid_pip_install.py"),
+               module_name]
+
         subprocess.call(cmd)
         self.assertTrue(os.path.exists(package_dir))
 
@@ -142,7 +145,7 @@ class TestLocalScripts(unittest.TestCase):
 
         intro = "Checking your system, this may take a few seconds..."
 
-        cmd = [os.path.join(project_dir(), "check_system")]
+        cmd = ['python', os.path.join(pydroid_dir(), "check_system.py")]
         p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
 
@@ -159,7 +162,7 @@ class TestLocalScripts(unittest.TestCase):
     def test_status_cmd_line(self):
         """Test checking the project status from the commandline."""
 
-        cmd = [os.path.join(project_dir(), "status")]
+        cmd = ['python', os.path.join(pydroid_dir(), "status.py")]
         p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
 

@@ -51,6 +51,6 @@ OTHER_FILES += \
     android/AndroidManifest.xml
 
 # Define pre-build script
-mytarget.commands = python $$PWD/scripts/qt_creator_prebuild_script.py
+mytarget.commands = python $$PWD/../../qt_creator_prebuild_script.py $$PWD
 QMAKE_EXTRA_TARGETS += mytarget
 PRE_TARGETDEPS += mytarget

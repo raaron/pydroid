@@ -6,16 +6,11 @@ import ConfigParser
 
 import test_utils
 
-# Add local scripts of the project_skeleton to the path to import some
-sys.path.insert(0, test_utils.get_local_skeleton_scripts_dir())
-
-from path_utils import *
-import complete_deploy
-
-# Add global scripts of the project_skeleton to the path to import some
-sys.path.insert(0, global_scripts_dir())
+sys.path.insert(0, os.pardir)
 
 import create_example
+from path_utils import *
+import complete_deploy
 
 
 class TestExamples(unittest.TestCase):
@@ -37,10 +32,10 @@ class TestExamples(unittest.TestCase):
         """Test deploying all examples."""
 
         for example_name in self.conf.sections():
-            test_utils.reload_local_skeleton_scripts()
+            os.chdir(tests_dir())
             app_name = example_name + create_example.APP_NAME_SUFFIX
             package_name = "%s.%s" % (create_example.DOMAIN, app_name)
-            project_dir = os.path.join(pydroid_dir(), app_name)
+            project_dir = os.path.join(tests_dir(), app_name)
             test_utils.remove_directories_if_exist([project_dir])
 
             self.assertFalse(os.path.exists(project_dir))
@@ -53,6 +48,7 @@ class TestExamples(unittest.TestCase):
             complete_deploy.complete_deploy()
             time.sleep(6)
             self.assertTrue(test_utils.is_app_running(package_name))
+            test_utils.stop_app(package_name)
             test_utils.remove_directories_if_exist([project_dir])
 
 

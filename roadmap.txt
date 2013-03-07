@@ -8,6 +8,8 @@ High priority
   - deployment for GooglePlay
   - Tutorial and list of devices/arm-version about configuring a project
 - Deploy a sample app on GooglePlay, include it in the tutorial
+- Set up a project configuration to include only necessary .so Qt files to
+  reduce the memory usage of the uncompressed app.
 
 
 Medium priority

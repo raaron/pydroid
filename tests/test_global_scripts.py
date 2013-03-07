@@ -1,48 +1,46 @@
 import unittest
 import sys
 import os
-import shutil
 import subprocess
 
 import test_utils
 
-# Add local scripts of the project_skeleton to the path to import some
-sys.path.insert(0, test_utils.get_local_skeleton_scripts_dir())
+sys.path.insert(0, os.pardir)
 
-from path_utils import pydroid_dir, global_scripts_dir
-
-# Add global scripts of the project_skeleton to the path to import some
-sys.path.insert(0, global_scripts_dir())
+from path_utils import pydroid_dir, tests_dir
 
 import create_example
-import pydroid
+import create_app
 
 
 APP_NAME = "hello_world"
 DOMAIN = 'hello.world'
-EXAMPLE_PROJECT_DIR = os.path.join(pydroid_dir(),
+EXAMPLE_PROJECT_DIR = os.path.join(tests_dir(),
                                    '%s%s' % (APP_NAME,
                                              create_example.APP_NAME_SUFFIX))
 
-NEW_PROJECT_DIR = os.path.join(pydroid_dir(), APP_NAME)
+NEW_PROJECT_DIR = os.path.join(tests_dir(), APP_NAME)
 
 
 class TestGlobalScripts(unittest.TestCase):
 
     def setUp(self):
-        test_utils.reload_local_skeleton_scripts()
+        os.chdir(tests_dir())
+        test_utils.remove_directories_if_exist([EXAMPLE_PROJECT_DIR,
+                                                NEW_PROJECT_DIR])
 
-        for d in [EXAMPLE_PROJECT_DIR, NEW_PROJECT_DIR]:
-            try:
-                shutil.rmtree(d)
-            except OSError:
-                pass
+    @classmethod
+    def tearDownClass(cls):
+        test_utils.remove_directories_if_exist([EXAMPLE_PROJECT_DIR,
+                                                NEW_PROJECT_DIR])
 
     def test_create_example_cmd_line(self):
         """Test creating example projects from the commandline."""
 
         self.assertFalse(os.path.exists(EXAMPLE_PROJECT_DIR))
-        cmd = [os.path.join(pydroid_dir(), "create_example"), APP_NAME]
+        cmd = ['python', os.path.join(pydroid_dir(), "create_example.py"),
+               APP_NAME]
+
         subprocess.call(cmd)
         self.assertTrue(os.path.exists(EXAMPLE_PROJECT_DIR))
 
@@ -53,19 +51,21 @@ class TestGlobalScripts(unittest.TestCase):
         create_example.create_example([APP_NAME])
         self.assertTrue(os.path.exists(EXAMPLE_PROJECT_DIR))
 
-    def test_pydroid_cmd_line(self):
+    def test_create_app_cmd_line(self):
         """Test creating a new project from the commandline."""
 
         self.assertFalse(os.path.exists(NEW_PROJECT_DIR))
-        cmd = [os.path.join(pydroid_dir(), "pydroid"), APP_NAME, DOMAIN]
+        cmd = ['python', os.path.join(pydroid_dir(), "create_app.py"),
+               APP_NAME, DOMAIN]
+
         subprocess.call(cmd)
         self.assertTrue(os.path.exists(NEW_PROJECT_DIR))
 
-    def test_pydroid_python_api(self):
+    def test_create_app_python_api(self):
         """Test creating a new project via python api."""
 
         self.assertFalse(os.path.exists(NEW_PROJECT_DIR))
-        pydroid.pydroid([APP_NAME, DOMAIN])
+        create_app.create_app([APP_NAME, DOMAIN])
         self.assertTrue(os.path.exists(NEW_PROJECT_DIR))
 
 
