@@ -10,10 +10,6 @@ import ConfigParser
 
 import global_script_utils
 
-
-DOMAIN = "com.example"
-APP_NAME_SUFFIX = "_example"
-
 # Add local scripts of the project_skeleton to the path to import some
 sys.path.insert(0, global_script_utils.get_local_skeleton_scripts_dir())
 
@@ -22,6 +18,10 @@ from path_utils import pydroid_dir
 from script_utils import reload_local_scripts
 import rename
 import add_library
+
+
+DOMAIN = "com.example"
+APP_NAME_SUFFIX = "_example"
 
 
 def setup_project(app_name, domain, override_existing=False):

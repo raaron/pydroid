@@ -60,6 +60,14 @@ def android_dir():
     return os.path.join(project_dir(), 'android')
 
 
+def android_bin_dir():
+    return os.path.join(android_dir(), 'bin')
+
+
+def android_gen_dir():
+    return os.path.join(android_dir(), 'gen')
+
+
 def android_res_raw_dir():
     return os.path.join(android_dir(), 'res', 'raw')
 
@@ -73,7 +81,7 @@ def libs_zip_file():
 
 
 def apk_file():
-    return os.path.join(android_dir(), 'bin', "%s-debug.apk" % app_name())
+    return os.path.join(android_bin_dir(), "%s-debug.apk" % app_name())
 
 
 def project_libs_dir():
@@ -90,6 +98,10 @@ def site_packages_dir():
 
 def app_dir():
     return os.path.join(project_dir(), 'app')
+
+
+def main_python_file():
+    return os.path.join(app_dir(), 'main.py')
 
 
 def pydroid_dir():
@@ -158,6 +170,10 @@ def device_sdcard_dir():
 
 def device_app_dir():
     return "/data/data/%s/files/app/" % package_name()
+
+
+def device_libs_dir():
+    return "/data/data/%s/files/libs/" % package_name()
 
 
 def __get_from_config(section, name, config_file):

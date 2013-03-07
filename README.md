@@ -11,6 +11,10 @@ Before starting using the framework, you have to adapt the following config file
 
     framework/project_skeleton/project.conf
 
+You can always check your system or your project with the following command:
+
+    ./check_system
+
 
 Creating a new project
 ----------------------
@@ -69,7 +73,7 @@ Be sure, to use the "Complete Deployment" method for the next deployment!
 
 
 Add additional libraries
-
+------------------------
 
 ###Python packages (available via pip)
 If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the following commands to install new packages into 'libs/python27':
@@ -82,6 +86,15 @@ Be sure, to use the "Complete Deployment" method for the next deployment!
 The following command adds an additional library to your project (the specified library_name must be present in the folder "framework/libs"):
 
     ./add_library library_name
+
+
+Get information and status of your project
+------------------------------------------
+The following command provides you with information about the most important
+paths of your project, the (estimated) size of the APK and the decompressed app
+and about some general settings for debugging:
+
+    ./status
 
 Logging
 -------

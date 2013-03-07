@@ -8,11 +8,11 @@ High priority
   - deployment for GooglePlay
   - Tutorial and list of devices/arm-version about configuring a project
 - Deploy a sample app on GooglePlay, include it in the tutorial
-- Implement a test_my_system script
 
 
 Medium priority
 ===============
+- report the size after deployment, for example for the complete deployment script
 - get meego/QtComponents/Themes compiled
 - get meego/QtComponents/Themes available for Ubuntu (also in virtual machine)
 - unzip archives during application installation and not during the first start
@@ -51,6 +51,10 @@ Low priority
 - make the project available for other architectures (BB10, OSX, Windows8, etc)
   without the need of code change
 - Write a GUI client or Sublime plugin or QtCreator plugin
+- Add the possibility to deploy only a very minimal apk that is an installer.
+  The înstaller then loads the required libraries from some server. this reduces
+  the size of the needed memory, since the .apk part is much smaller (save about
+  12MB I guess), but the size of the uncompressed data still remains the same.
 
 
 

@@ -15,6 +15,8 @@ import zip_app
 import zip_libs
 import add_library
 import pydroid_pip_install
+import check_system
+import status
 
 # Add global scripts of the project_skeleton to the path to import some
 sys.path.insert(0, global_scripts_dir())
@@ -134,6 +136,44 @@ class TestLocalScripts(unittest.TestCase):
         self.assertFalse(os.path.exists(libs_zip_file()))
         zip_libs.zip_libs()
         self.assertTrue(os.path.exists(libs_zip_file()))
+
+    def test_check_system_cmd_line(self):
+        """Test checking your system and configuration from the commandline."""
+
+        intro = "Checking your system, this may take a few seconds..."
+
+        cmd = [os.path.join(project_dir(), "check_system")]
+        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+
+        out = p.communicate()[0]
+        self.assertIn(intro, out)
+        self.assertTrue('Success' in out or 'Fix' in out)
+
+    def test_check_system_python_api(self):
+        """Test checking your system and configuration via python api."""
+
+        errors, successes = check_system.check_system()
+        self.assertTrue(len(errors) + len(successes) >= 5)
+
+    def test_status_cmd_line(self):
+        """Test checking the project status from the commandline."""
+
+        cmd = [os.path.join(project_dir(), "status")]
+        p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+
+        out = p.communicate()[0]
+        self.assertIn('Project information', out)
+        self.assertIn(project_dir(), out)
+
+    def test_status_python_api(self):
+        """Test checking the project status via python api."""
+        report = status.status()
+        self.assertIn('Project information', str(report))
+        self.assertIn(project_dir(), str(report))
+        self.assertFalse(report.was_deployed)
+        self.assertTrue(report.uncompressed_size > 10**7)   # 10MB
 
 
 if __name__ == '__main__':

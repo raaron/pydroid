@@ -50,15 +50,6 @@ def is_app_running(package_name):
     return package_name in output
 
 
-def is_device_connected():
-    """Is there a device recognized by adb?"""
-
-    p = subprocess.Popen([adb_path(), 'devices'], shell=False,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = p.communicate()[0]
-    return output.split('\n')[1]
-
-
 def stop_app(package_name):
     """Stop the app with 'package_name on the device.'"""
     cmd = [adb_path(), "shell", "am", "force-stop", package_name]
