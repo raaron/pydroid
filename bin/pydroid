@@ -17,6 +17,7 @@ from pydroid import fast_deploy
 from pydroid import pydroid_pip_install
 from pydroid import rename
 from pydroid import status
+from pydroid import qt_creator_prebuild_script
 from pydroid.path_utils import *
 
 
@@ -126,6 +127,8 @@ def parse_command(args):
                 print status.status()
             elif cmd == 'check':
                 check_system.check_system()
+            elif cmd == 'qt_creator_prebuild_script':
+                qt_creator_prebuild_script.execute(args[1])
             else:
                 print_general_help()
         except InvalidArgumentException as e:

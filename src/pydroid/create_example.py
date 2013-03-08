@@ -44,6 +44,7 @@ def create_example_project(example_name, app_name, domain, override_existing=Fal
     Check if this example exists and if so, create a new project with
     'app_name' for it.
     """
+    print os.getcwd(), app_name
     new_project_dir = os.path.join(os.getcwd(), app_name)
 
     # Create the project

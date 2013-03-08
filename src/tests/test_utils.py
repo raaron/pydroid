@@ -3,7 +3,7 @@ import os
 import shutil
 import subprocess
 
-sys.path.insert(0, os.pardir)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from pydroid.path_utils import adb_path
 
@@ -12,10 +12,8 @@ def remove_directories_if_exist(dirs):
     """Try to remove all directories in dirs."""
 
     for d in dirs:
-        try:
+        if os.path.exists(d):
             shutil.rmtree(d)
-        except OSError:
-            pass
 
 
 def is_app_running(package_name):

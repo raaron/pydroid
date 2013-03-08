@@ -11,12 +11,12 @@ import zip_app
 import zip_libs
 
 
-def main():
+def execute(project_dir):
     """Zip APP_DIR and LIBS_DIR."""
-    os.chdir(sys.argv[1])
+    os.chdir(project_dir)
     zip_app.zip_app()
     zip_libs.zip_libs()
 
 
 if __name__ == '__main__':
-    main()
+    execute(sys.argv[1])

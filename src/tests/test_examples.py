@@ -6,7 +6,7 @@ import ConfigParser
 
 import test_utils
 
-sys.path.insert(0, os.pardir)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from pydroid import create_example
 from pydroid.path_utils import *
@@ -48,7 +48,7 @@ class TestExamples(unittest.TestCase):
             create_example.create_example([example_name])
             self.assertTrue(os.path.exists(project_dir))
             complete_deploy.complete_deploy()
-            time.sleep(6)
+            time.sleep(8)
             self.assertTrue(test_utils.is_app_running(package_name))
             test_utils.stop_app(package_name)
             test_utils.remove_directories_if_exist([project_dir])

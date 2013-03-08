@@ -1,1 +1,0 @@
-# There is no model for this simple example.

@@ -5,7 +5,7 @@ import subprocess
 
 import test_utils
 
-sys.path.insert(0, os.pardir)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from pydroid import create_example
 from pydroid import create_app
