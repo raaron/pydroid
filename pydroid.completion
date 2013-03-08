@@ -1,0 +1,83 @@
+DIST_PACKAGES_DIR=`python -c"import pydroid, os; print os.path.dirname(pydroid.__file__)"`
+FRAMEWORK_DIR=$DIST_PACKAGES_DIR/framework
+
+is_project_dir () {
+    if [ -d app -a -d libs -a -d android -a -f main.cpp -a -f main.h ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+_pydroid()
+{
+    # separator for completion options
+    local IFS=$'\n'
+
+    local cur prev opts prevprev prevprevprev
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    prevprev="${COMP_WORDS[COMP_CWORD-2]}"
+    prevprevprev="${COMP_WORDS[COMP_CWORD-3]}"
+
+    is_project_dir
+
+    # inside a project directory
+    if [ $? -eq 1 ]; then
+
+        # pydroid
+        if [[ ${prev} == pydroid ]] ; then
+            opts=$'rename\nadd\npip\ndeploy\nstatus\ncheck'
+
+        # pydroid cmd1
+        elif [[ ${prevprev} == pydroid ]] ; then
+            if [[ ${prev} == rename ]] ; then
+                opts=$'name:NEW_NAME domain:COM.EXAMPLE'
+            elif [[ ${prev} == add ]] ; then
+                opts=$'library'
+            elif [[ ${prev} == pip ]] ; then
+                opts=$'install'
+            elif [[ ${prev} == deploy ]] ; then
+                opts=$'complete\nfast'
+            fi
+
+        # pydroid cmd1 cmd2
+        elif [[ ${prevprevprev} == pydroid ]] ; then
+            if [[ ${prevprev} == add ]] ; then
+                if [[ ${prev} == library ]] ; then
+                    opts=`ls -l --time-style="long-iso" $FRAMEWORK_DIR/libs | egrep '^d' | awk '{print $8}'`
+                fi
+            fi
+        fi
+
+
+    # not inside a project directory
+    else
+
+        # pydroid
+        if [[ ${prev} == pydroid ]] ; then
+            opts=$'create\ncheck'
+
+        # pydroid cmd1
+        elif [[ ${prevprev} == pydroid ]] ; then
+            if [[ ${prev} == create ]] ; then
+                opts=$'app\nexample'
+            fi
+
+        # pydroid cmd1 cmd2
+        elif [[ ${prevprevprev} == pydroid ]] ; then
+            if [[ ${prevprev} == create ]] ; then
+                if [[ ${prev} == example ]] ; then
+                    opts=`ls -l --time-style="long-iso" $FRAMEWORK_DIR/examples | egrep '^d' | awk '{print $8}'`
+                elif [[ ${prev} == app ]] ; then
+                    opts=$'name:APP_NAME domain:COM.EXAMPLE'
+                fi
+            fi
+        fi
+    fi
+
+    COMPREPLY=( $(compgen -W "$(printf "%s\n" "${opts}")" -- ${cur}) )
+    return 0
+}
+complete -F _pydroid pydroid

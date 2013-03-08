@@ -1,0 +1,256 @@
+#!/usr/bin/python
+
+# Implements the commandline API of pydroid. Starts the required scripts if
+# the command syntax was correct, otherwise provides help information.
+
+import sys
+import os
+
+sys.path.insert(0, "/home/aaron/programmieren/python/projects/pydroid/src")
+
+from pydroid import create_example
+from pydroid import create_app
+from pydroid import add_library
+from pydroid import check_system
+from pydroid import complete_deploy
+from pydroid import fast_deploy
+from pydroid import pydroid_pip_install
+from pydroid import rename
+from pydroid import status
+from pydroid.path_utils import *
+
+
+PROJECT_HELP = "Project help"
+GENERAL_HELP = "General help"
+CREATE_HELP = "Create help"
+CREATE_EXAMPLE_HELP = "Create example help"
+CREATE_APP_HELP = "Create app help"
+RENAME_HELP = "Rename help"
+ADD_HELP = "Add help"
+ADD_LIBRARY_HELP = "Add library help"
+PIP_HELP = "Pip help"
+PIP_INSTALL_HELP = "Pip install help"
+DEPLOY_HELP_DEPLOYED = "Deploy help for already deployed"
+DEPLOY_HELP_NOT_DEPLOYED = "Deploy help for not already deployed"
+STATUS_HELP = "Status help"
+CHECK_HELP = "Check help"
+
+
+class InvalidArgumentException(Exception):
+    """Exception to be thrown in case of an invalid command argument."""
+
+
+class KeyValueEvaluator(dict):
+    """Evaluates a set of key-value arguments."""
+
+    def __init__(self, args):
+        super(KeyValueEvaluator, self).__init__()
+
+        syntax_help = " Usage: key:value"
+
+        for item in args:
+            if item.count(':') != 1:
+                msg = ("Invalid key-value argument: '%s'." % item) + syntax_help
+                raise InvalidArgumentException(msg)
+            key, value = item.split(':')
+            if not key:
+                msg = "Empty keys are not allowed in key-value arguments: '%s'."
+                msg = msg % item + syntax_help
+                raise InvalidArgumentException(msg)
+            if not value:
+                msg = "Empty values are not allowed in key-value arguments: '%s'."
+                msg = msg % item + syntax_help
+                raise InvalidArgumentException(msg)
+
+            self[key] = value
+
+
+def get_examples():
+    """Return a list of all available examples."""
+
+    return [l for l in os.listdir(examples_dir()) if l != 'examples.conf']
+
+
+def get_libraries():
+    """Return a list of all available libraries."""
+
+    return [l for l in os.listdir(examples_dir()) if l != 'libs.conf']
+
+
+def print_general_help():
+    """
+    Prints general help information. If the current directory is a project
+    directory, focus on project specific commands, else focus on general
+    commands.
+    """
+    if is_project_dir():
+        print PROJECT_HELP
+    else:
+        print GENERAL_HELP
+
+
+def print_deploy_help():
+    """
+    Prints help information for 'deploy' commands.
+    If the project has already been deployed at least once, show different
+    information, because fast_deploy is available.
+    """
+    if os.path.exists(apk_file()):
+        print DEPLOY_HELP_DEPLOYED
+    else:
+        print DEPLOY_HELP_NOT_DEPLOYED
+
+
+def parse_command(args):
+    """
+    Analyzes the first argument and passes the rest to the corresponding parser
+    if necessary.
+    """
+    if not args:
+        print_general_help()
+    else:
+        try:
+            cmd = args[0]
+
+            if cmd == 'create':
+                parse_create(args[1:])
+            elif cmd == 'rename':
+                parse_rename(args[1:])
+            elif cmd == 'add':
+                parse_add(args[1:])
+            elif cmd == 'pip':
+                parse_pip(args[1:])
+            elif cmd == 'deploy':
+                parse_deploy(args[1:])
+            elif cmd == 'status':
+                print status.status()
+            elif cmd == 'check':
+                check_system.check_system()
+            else:
+                print_general_help()
+        except InvalidArgumentException as e:
+            print "Invalid argument:"
+            print e
+            sys.exit(0)
+
+
+def parse_create(args):
+    """Parses the rest of a 'create' command."""
+
+    if not args:
+        print CREATE_HELP
+    else:
+        cmd = args[0]
+
+        if cmd == 'example':
+            parse_create_example(args[1:])
+        elif cmd == 'app':
+            parse_create_app(args[1:])
+        else:
+            print CREATE_HELP
+
+
+def parse_create_example(args):
+    """Parses the arguments of a 'create example' command."""
+
+    if len(args) != 1 or (len(args) and args[0] not in get_examples()):
+        print CREATE_EXAMPLE_HELP
+    else:
+        create_example.create_example([args[0]])
+
+
+def parse_create_app(args):
+    """Parses the arguments of a 'create example' command."""
+
+    if len(args) != 2:
+        print CREATE_APP_HELP
+    else:
+        params = KeyValueEvaluator(args)
+        if not 'name' in params or not 'domain' in params:
+            print CREATE_APP_HELP
+        else:
+            create_app.create_app([params['name'], params['domain']])
+
+
+def parse_rename(args):
+    """Parses the rest of a 'rename' command."""
+
+    ensure_project_dir()
+    if len(args) != 2:
+        print RENAME_HELP
+    else:
+        params = KeyValueEvaluator(args)
+
+        if not 'name' in params or not 'domain' in params:
+            print RENAME_HELP
+        else:
+            rename.rename([params['name'], params['domain']])
+
+
+def parse_add(args):
+    """Parses the rest of a 'add' command."""
+
+    ensure_project_dir()
+    if not args:
+        print ADD_HELP
+    else:
+        cmd = args[0]
+
+        if cmd == 'library':
+            parse_add_library(args[1:])
+        else:
+            print ADD_HELP
+
+
+def parse_add_library(args):
+    """Parses the res tof a 'add library' command."""
+
+    if len(args) != 1 or (len(args) and args[0] not in get_libraries()):
+        print ADD_LIBRARY_HELP
+    else:
+        add_library.add_library([args[0]])
+
+
+def parse_pip(args):
+    """Parses the rest of a 'pip' command."""
+
+    ensure_project_dir()
+    if not args:
+        print PIP_HELP
+    else:
+        cmd = args[0]
+
+        if cmd == 'install':
+            parse_pip_install(args[1:])
+
+
+def parse_pip_install(args):
+    """Parses the res tof a 'pip install' command."""
+
+    if len(args) != 1:
+        print PIP_INSTALL_HELP
+    else:
+        pydroid_pip_install.pydroid_pip_install([args[0]])
+
+
+def parse_deploy(args):
+    """Parses the rest of a 'deploy' command."""
+
+    ensure_project_dir()
+    if len(args) != 1:
+        print_deploy_help()
+    else:
+        cmd = args[0]
+
+        if cmd == 'fast':
+            fast_deploy.fast_deploy()
+        elif cmd == 'complete':
+            complete_deploy.complete_deploy()
+        else:
+            print_deploy_help()
+
+
+if __name__ == "__main__":
+    parse_command(sys.argv[1:])
+    # cmd = "deploy"
+    # parse_command(cmd.split(' '))

@@ -1,0 +1,3 @@
+graft src/pydroid/framework
+include src/pydroid/README.md
+include pydroid.completion
