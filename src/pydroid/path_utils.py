@@ -52,7 +52,7 @@ def framework_libs_dir():
 
 
 def build_config_file():
-    return os.path.join(pydroid_dir(), 'deploy.conf')
+    return os.path.join(os.environ['HOME'], '.pydroid', 'deploy.conf')
 
 
 ########## Project specific paths #############################################

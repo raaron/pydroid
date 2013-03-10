@@ -4,3 +4,4 @@ rm -f /etc/bash_completion.d/pydroid.completion
 rm -rf build
 rm -rf dist
 rm -rf pydroid.egg-info
+rm -f $HOME/.pydroid/deploy.conf

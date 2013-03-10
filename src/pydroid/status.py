@@ -16,7 +16,7 @@ class StatusReport(object):
         self.important_build_paths = self.get_important_build_paths()
         self.important_device_paths = self.get_important_device_paths()
         self.uncompressed_size = self.get_uncompressed_size()
-        self.uses_qml = "TODO"
+        self.uses_qml = self.__uses_qml()
         self.uses_qt_components = 'qt_components' in os.listdir(project_libs_dir())
         self.app_name = app_name()
         self.package_name = package_name()
@@ -89,6 +89,14 @@ class StatusReport(object):
                     total_size += os.path.getsize(fp)
 
         return total_size
+
+    def __uses_qml(self):
+        """Does this project use qml files?"""
+        for dirpath, dirnames, filenames in os.walk(app_dir()):
+            for f in filenames:
+                if f.endswith('.qml'):
+                    return True
+        return False
 
     def get_directory_pretty_print(self, d):
         """Return a two column table of keys and values of directory 'd'."""

@@ -15,7 +15,13 @@ def get_package_data():
         for f in files:
             result.append(os.path.join(dir_path_from_root, f))
 
+    # # Include config files:
+    # result.append('deploy.conf')
     return result
+
+
+home = os.path.expanduser('~')
+user_pydroid_config_dir = os.path.join(home, '.pydroid')
 
 
 setup(name='pydroid',
@@ -26,14 +32,18 @@ setup(name='pydroid',
                   "deploying PySide (Qt bindings for python) applications" \
                   "to Android devices.",
 
-      data_files=[('/etc/bash_completion.d', ['pydroid.completion'])],
+      data_files=[('/etc/bash_completion.d', ['pydroid.completion']),
+                  (user_pydroid_config_dir,
+                            [os.path.join('src', 'pydroid', 'deploy.conf')])],
 
       license="LGPL",
       keywords="pyside android framework",
       url="http://packages.python.org/an_example_pypi_project",
-      long_description=read(os.path.join('src', 'pydroid', 'README.md')),
+      long_description=read('README.md'),
       packages=['pydroid'],
       package_dir={'pydroid': 'src/pydroid'},
       package_data={'pydroid': get_package_data()},
       scripts=[os.path.join('bin', 'pydroid')]
       )
+
+os.chmod(os.path.join(user_pydroid_config_dir, 'deploy.conf'), 0666)

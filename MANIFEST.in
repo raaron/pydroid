@@ -1,3 +1,4 @@
 graft src/pydroid/framework
-include src/pydroid/README.md
+include README.md
 include pydroid.completion
+include src/pydroid/deploy.conf

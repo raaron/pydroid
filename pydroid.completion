@@ -9,6 +9,14 @@ is_project_dir () {
     fi
 }
 
+was_already_deployed () {
+    if [ -d android/bin -a -d android/gen ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
 _pydroid()
 {
     # separator for completion options
@@ -28,7 +36,15 @@ _pydroid()
 
         # pydroid
         if [[ ${prev} == pydroid ]] ; then
-            opts=$'rename\nadd\npip\ndeploy\nstatus\ncheck'
+
+            was_already_deployed
+
+            # yes => fast and complete deploy available
+            if [ $? -eq 1 ]; then
+                opts=$'rename\nadd\npip\ndeploy\nstatus\ncheck'
+            else
+                opts=$'rename\nadd\npip\ndeploy complete\nstatus\ncheck'
+            fi
 
         # pydroid cmd1
         elif [[ ${prevprev} == pydroid ]] ; then
@@ -39,7 +55,15 @@ _pydroid()
             elif [[ ${prev} == pip ]] ; then
                 opts=$'install'
             elif [[ ${prev} == deploy ]] ; then
-                opts=$'complete\nfast'
+
+                was_already_deployed
+
+                # yes => fast and complete deploy available
+                if [ $? -eq 1 ]; then
+                    opts=$'complete\nfast'
+                else
+                    opts=$'complete'
+                fi
             fi
 
         # pydroid cmd1 cmd2

@@ -7,30 +7,33 @@ This project provides helpers for simple project creation and deployment.
 
 Set up your system
 ------------------
-Before starting using the framework, you have to adapt the following config file according to your system:
 
-    framework/project_skeleton/project.conf
+Install pydroid with the following command:
+
+    sudo python setup.py install
+
+Before deploying your first app, you have to adapt the following config file according to your system:
+
+    ~/.pydroid/deploy.conf
 
 You can always check your system or your project with the following command:
 
-    ./check_system
+    pydroid check
 
 
 Creating a new project
 ----------------------
-    ./pydroid my_project_name my.domain.name
+    pydroid create name:app my_project_name domain:my.domain
 
-The created app is already deployable and shows a simple Hello world. The directory my_project_name/app contains the important python and qml files: main.py and view.qml.
+The created app is already deployable and shows a simple Hello world. The directory my_project_name/app contains the important python and qml files: controller.py, view.py, model.py and view.qml.
 
-Then open the file my_project_name.pro in the Necessitas Qt Creator and deploy the app using the green deploy button.
+For deploying the created app to the device, see the 'Deploying' section.
 
-There is a all-in-one-script for creating, deploying and running a "Hello world!" app with one single command (requires your system to be set up correctly, see "Set up your system" above):
+Creating an example project
+---------------------------
+There are many runnable examples (you can list the available examples using the autocompletion by hitting 'TAB' after 'pydroid create example'):
 
-    ./hello
-
-And finally, there is a command to create an example application (the first parameter is the name of an example in the folder framework/examples):
-
-    ./create_example hello_world
+    pydroid create example hello_world
 
 
 Deploying the project to the Android device
@@ -39,13 +42,13 @@ Deploying the project to the Android device
 ### Complete Deployment (slow)
 Use this variant for the first deployment or if you made changes in any file outside of the folder 'app', e.g. in 'libs' by adding a new python package. There are two options to perform a complete deployment:
 
+Commandline:
+
+    pydroid deploy complete
+
 QtCreator:
 
 By pressing the "Run" button in QtCreator the entire project is deployed to the device. This takes much more time than using the "Fast Deployment".
-
-Commandline:
-
-    ./complete_deploy
 
 
 ### Fast Deployment
@@ -54,7 +57,7 @@ The script removes the old files in the directory 'app' from the device and inse
 
 Commandline:
 
-    ./fast_deploy
+    pydroid deploy fast
 
 
 QtCreator:
@@ -63,12 +66,12 @@ You can add this script to
 
     QtCreator->Tools->External->Configure->Add->Add Tool
 
-Browse to the executable located at pydroid/framework/project_skeleton/fast_deploy. Set the 'Working directory' to %{CurrentProject:Path}. You may then assign a keyboard shortcut (e.g. ctrl+h) to this tool via Tools->External->Options->Keyboard. Just type the first letters of "fast_deploy" to quickly find the created external tool.
+Browse to the executable located at /usr/local/lib/python2.7/dist-packages/pydroid-0.1.1-py2.7.egg/pydroid/fast_deploy.py. Set the 'Working directory' to %{CurrentProject:Path}. You may then assign a keyboard shortcut (e.g. ctrl+h) to this tool via Tools->External->Options->Keyboard. Just type the first letters of "fast_deploy.py" to quickly find the created external tool.
 
 
 Rename a project
 ----------------
-    ./rename new_name new.domain
+    pydroid rename name:new_name domain:new.domain
 Be sure, to use the "Complete Deployment" method for the next deployment!
 
 
@@ -78,14 +81,14 @@ Add additional libraries
 ###Python packages (available via pip)
 If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the following commands to install new packages into 'libs/python27':
 
-    ./pydroid_pip_install package_name
+    pydroid pip install package_name
 
 Be sure, to use the "Complete Deployment" method for the next deployment!
 
-###Other libraries (located in framework/libs)
-The following command adds an additional library to your project (the specified library_name must be present in the folder "framework/libs"):
+###Other libraries
+The following command adds an additional library to your project (you can list the available libraries using the autocompletion by hitting 'TAB' after 'pydroid add library'):
 
-    ./add_library library_name
+    pydroid add library library_name
 
 
 Get information and status of your project
@@ -94,7 +97,7 @@ The following command provides you with information about the most important
 paths of your project, the (estimated) size of the APK and the decompressed app
 and about some general settings for debugging:
 
-    ./status
+    pydroid status
 
 Logging
 -------

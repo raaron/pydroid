@@ -1,0 +1,2 @@
+This file is here for including its (empty) parent directory when using setup.py.
+Otherwise, the parent folder wouldn't be included.

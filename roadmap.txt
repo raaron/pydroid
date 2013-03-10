@@ -1,6 +1,7 @@
 High priority
 =============
 - Remove temporary fast_deploy files from sdcard
+- Remove TODO (dependencies) in status.py
 - Set up a virtual machine for virtualbox
 - Prepare a .apk and a sample project for Android 2.3.3 (API level 8 or 9)
 - Get information about arm version (armv5, armv6, armv7):
@@ -10,12 +11,12 @@ High priority
 - Deploy a sample app on GooglePlay, include it in the tutorial
 - Set up a project configuration to include only necessary .so Qt files to
   reduce the memory usage of the uncompressed app.
-- no_mvc example
 
 
 Medium priority
 ===============
 - report the size after deployment, for example for the complete deployment script
+- make tests passing with nosetests
 - get meego/QtComponents/Themes compiled
 - get meego/QtComponents/Themes available for Ubuntu (also in virtual machine)
 - unzip archives during application installation and not during the first start
