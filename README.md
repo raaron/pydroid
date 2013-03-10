@@ -23,7 +23,7 @@ You can always check your system or your project with the following command:
 
 Creating a new project
 ----------------------
-    pydroid create name:app my_project_name domain:my.domain
+    pydroid create name:app_name domain:my.domain
 
 The created app is already deployable and shows a simple Hello world. The directory my_project_name/app contains the important python and qml files: controller.py, view.py, model.py and view.qml.
 
