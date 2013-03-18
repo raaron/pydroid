@@ -15,6 +15,7 @@ if [ $INPUT = "y" ]; then
 
   # Remove tests
   find . -type d -name 'test' -print -exec rm -rf {} \;
+  find . -type d -name 'tests' -print -exec rm -rf {} \;
 
   # Remove egg infos in site packages
   find . -name '*.egg-info' -delete
