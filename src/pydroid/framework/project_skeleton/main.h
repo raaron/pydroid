@@ -15,6 +15,10 @@
 
 #define QML_IMPORT_PATH "/data/data/org.modrana.project_skeleton/files/libs/qt_components/components/"
 
-#define PYSIDE_APPLICATION_FOLDER "/data/data/org.modrana.project_skeleton/"
+#define LOG_DIR "/sdcard/project_skeleton_log/"
+
+#define LIBSHIBOKEN_PATH "/data/data/org.modrana.project_skeleton/files/libs/python27/libshiboken.so"
+
+#define LIBPYSIDE_PATH "/data/data/org.modrana.project_skeleton/files/libs/python27/libpyside.so"
 
 #endif // MAIN_H

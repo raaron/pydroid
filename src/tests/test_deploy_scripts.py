@@ -13,6 +13,7 @@ from pydroid import create_app
 from pydroid.path_utils import *
 from pydroid import complete_deploy
 from pydroid import fast_deploy
+from pydroid.script_utils import is_device_rooted
 
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -31,8 +32,9 @@ class TestHelloWorldDeployScripts(unittest.TestCase):
         created.
         """
         os.chdir(TESTS_DIR)
-        test_utils.stop_app(PACKAGE_NAME)
-        self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
+        if is_device_rooted():
+            test_utils.stop_app(PACKAGE_NAME)
+            self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
         test_utils.remove_directories_if_exist([PROJECT_DIR])
         self.assertFalse(os.path.exists(PROJECT_DIR))
 
@@ -42,7 +44,8 @@ class TestHelloWorldDeployScripts(unittest.TestCase):
         # Wait for termination of the app installation before checking
         time.sleep(6)
         self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
-        test_utils.stop_app(PACKAGE_NAME)
+        if is_device_rooted():
+            test_utils.stop_app(PACKAGE_NAME)
         os.chdir(TESTS_DIR)
         test_utils.remove_directories_if_exist([PROJECT_DIR])
 
@@ -69,7 +72,8 @@ class TestCompleteDeployScripts(unittest.TestCase):
     def setUpClass(cls):
         """Set up a new project."""
         os.chdir(TESTS_DIR)
-        test_utils.stop_app(PACKAGE_NAME)
+        if is_device_rooted():
+            test_utils.stop_app(PACKAGE_NAME)
         test_utils.remove_directories_if_exist([PROJECT_DIR])
         create_app.create_app([APP_NAME, DOMAIN])
 
@@ -81,13 +85,15 @@ class TestCompleteDeployScripts(unittest.TestCase):
         test_utils.remove_directories_if_exist([PROJECT_DIR])
 
     def setUp(self):
-        self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
+        if is_device_rooted():
+            self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
 
     def tearDown(self):
         # Wait for termination of the app installation before checking
         time.sleep(6)
         self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
-        test_utils.stop_app(PACKAGE_NAME)
+        if is_device_rooted():
+            test_utils.stop_app(PACKAGE_NAME)
 
     def test_complete_deploy_cmd_line(self):
         """Test deploying and running the test project from the commandline."""
@@ -104,47 +110,57 @@ class TestCompleteDeployScripts(unittest.TestCase):
 
 
 class TestFastDeployScript(unittest.TestCase):
-    """Test cases for fast_deploy.py script."""
+    """
+    Test cases for fast_deploy.py script. This tests are possible for rooted
+    devices only.
+    """
 
     @classmethod
     def setUpClass(cls):
         """Create a new test project and install and run it properly."""
 
-        os.chdir(TESTS_DIR)
-        test_utils.stop_app(PACKAGE_NAME)
-        hello_world.hello_world(show_log=False)
+        if is_device_rooted():
+            os.chdir(TESTS_DIR)
+            test_utils.stop_app(PACKAGE_NAME)
+            hello_world.hello_world(show_log=False)
 
-        # Wait for termination of the app installation before doing fast deploys.
-        time.sleep(6)
-        test_utils.stop_app(PACKAGE_NAME)
+            # Wait for termination of the app installation before doing fast deploys.
+            time.sleep(6)
+            test_utils.stop_app(PACKAGE_NAME)
 
     @classmethod
     def tearDownClass(cls):
         """Clean up the test project."""
 
-        test_utils.remove_directories_if_exist([PROJECT_DIR])
+        if is_device_rooted():
+            test_utils.remove_directories_if_exist([PROJECT_DIR])
 
     def setUp(self):
-        self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
+        if is_device_rooted():
+            self.assertFalse(test_utils.is_app_running(PACKAGE_NAME))
 
     def tearDown(self):
 
-        # Wait until the app was started successful
-        time.sleep(6)
+        if is_device_rooted():
 
-        self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
-        test_utils.stop_app(PACKAGE_NAME)
+            # Wait until the app was started successful
+            time.sleep(6)
+
+            self.assertTrue(test_utils.is_app_running(PACKAGE_NAME))
+            test_utils.stop_app(PACKAGE_NAME)
 
     def test_fast_deploy_cmd_line(self):
         """Test the fast deployment method from command line."""
 
-        cmd = ['pydroid', 'deploy', 'fast']
-        subprocess.call(cmd)
+        if is_device_rooted():
+            cmd = ['pydroid', 'deploy', 'fast']
+            subprocess.call(cmd)
 
     def test_fast_deploy_python_api(self):
         """Test the fast deployment method via python api."""
 
-        fast_deploy.fast_deploy(show_log=False)
+        if is_device_rooted():
+            fast_deploy.fast_deploy(show_log=False)
 
 
 if __name__ == '__main__':

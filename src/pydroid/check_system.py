@@ -6,6 +6,7 @@ import os
 import subprocess
 
 from path_utils import *
+import script_utils
 
 
 SEPARATOR = '\n%s\n' % ('-' * 79)
@@ -76,14 +77,14 @@ def check_pydroid_directory_structure(errors, successes):
 
 def check_project_configuration(errors, successes):
     """
-    Check if the configuration file 'project.conf' has been modified where
-    required.
+    Check if the configuration file '~/.pydroid/deploy.conf' has been modified
+    where required.
     Returns true if the check is successful.
     """
     successful = True
-    problem = "The following configuration value in 'project.conf' has not already been\n"\
-              "adapted to your system:\n\t'%s'"
-    fix = "Edit the file YOUR_PROJECT_DIR/project.conf according to your system."
+    problem = "The following configuration value in '~/.pydroid/deploy.conf' has not\n"\
+              "already been adapted to your system:\n\t'%s'"
+    fix = "Edit the file '~/.pydroid/deploy.conf' according to your system."
     if adb_path() == ADB_PATH_PLACEHOLDER:
         errors.append(Error(problem % 'adb_path', fix))
         successful = False
@@ -136,14 +137,6 @@ def is_device_connected():
     return output.split('\n')[1] != ""
 
 
-def is_device_rooted():
-    """Is the rooted device recognized by adb rooted?"""
-
-    p = subprocess.Popen([adb_path(), 'shell', 'su -c "pwd"'], shell=False,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return "not found" not in p.communicate()[0]
-
-
 def check_device_connected(errors, successes):
     """
     Check if a Android device can be recognized by adb.
@@ -176,11 +169,11 @@ def check_device_rooted(errors, successes):
     Check if the recognized Android device is rooted.
     If so, return true.
     """
-    if is_device_rooted():
+    if script_utils.is_device_rooted():
         successes.append(Success("Android device is rooted"))
         return True
     else:
-        problem = "Your device is not rooted. The following scripts will not work:\n\t./fast_deploy\n\t./hello."
+        problem = "Your device is not rooted. The following command will not work:\n\n\tpydroid deploy fast"
         fix = "IMPORTANT NOTE: Rooting the device will destroy your warranty on the device!\n"\
               "Rooting the device is device specific. Search on Google for \n"\
               "'android root MY_DEVICE_TYPE' to find\n"\

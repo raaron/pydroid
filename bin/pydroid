@@ -21,21 +21,97 @@ from pydroid import status
 from pydroid import qt_creator_prebuild_script
 from pydroid.path_utils import *
 
+CREATE_APP_CMD = "pydroid create name:APP_NAME domain:COM.EXAMPLE"
+CREATE_EXAMPLE_CMD = "pydroid create example hello_world"
+CHECK_CMD = "pydroid check"
 
-PROJECT_HELP = "Project help"
-GENERAL_HELP = "General help"
-CREATE_HELP = "Create help"
-CREATE_EXAMPLE_HELP = "Create example help"
-CREATE_APP_HELP = "Create app help"
-RENAME_HELP = "Rename help"
-ADD_HELP = "Add help"
-ADD_LIBRARY_HELP = "Add library help"
-PIP_HELP = "Pip help"
-PIP_INSTALL_HELP = "Pip install help"
-DEPLOY_HELP_DEPLOYED = "Deploy help for already deployed"
-DEPLOY_HELP_NOT_DEPLOYED = "Deploy help for not already deployed"
-STATUS_HELP = "Status help"
-CHECK_HELP = "Check help"
+RENAME_CMD = "pydroid rename name:NEW_NAME domain:COM.EXAMPLE"
+PIP_INSTALL_CMD = "pydroid pip install PACKAGE_NAME"
+ADD_LIBRARY_CMD = "pydroid add library LIBRARY_NAME"
+DEPLOY_COMPLETE_CMD = "pydroid deploy complete"
+DEPLOY_FAST_CMD = "pydroid deploy fast"
+STATUS_CMD = "pydroid status"
+
+
+template = "%s\n    %s\n"
+
+CREATE_APP_DESCR = template % ("Create a new app:", CREATE_APP_CMD)
+CREATE_EXAMPLE_DESCR = template % ("Create a sample app:",
+                                   CREATE_EXAMPLE_CMD)
+
+CHECK_DESCR = template % ("Check your system and configuration:", CHECK_CMD)
+
+RENAME_DESCR = template % ("Rename this project:", RENAME_CMD)
+
+PIP_INSTALL_DESCR = template % ("Add a python library to the project:",
+                                PIP_INSTALL_CMD)
+
+ADD_LIBRARY_DESCR = template % ("Add a library to the project:",
+                                ADD_LIBRARY_CMD)
+
+DEPLOY_COMPLETE_DESCR = template % ("Deploy the complete app to the device:",
+                                    DEPLOY_COMPLETE_CMD)
+
+DEPLOY_FAST_DESCR = template % ("Redeploy the 'app' folder only:",
+                                DEPLOY_FAST_CMD)
+
+STATUS_DESCR = template % ("Show information about this project:", STATUS_CMD)
+
+
+def get_examples():
+    """Return a list of all available examples."""
+
+    return [l for l in os.listdir(examples_dir()) if l != 'examples.conf']
+
+
+def get_libraries():
+    """Return a list of all available libraries."""
+
+    return [l for l in os.listdir(examples_dir()) if l != 'libs.conf']
+
+
+def get_options(*args):
+    """
+    Return a readable representation of what options are currently available.
+    """
+    return "\nOptions:\n--------\n* " + "\n* ".join(args) + "\n"
+
+
+def get_usage(descr):
+    """Return a readable representation of a usage example of a command."""
+
+    return "\nUsage:\n------\n" + descr + "\n\n"
+
+
+def get_available(name, options):
+    """Return a readable representation of a usage example of a command."""
+
+    title = "Available %s:" % name
+    return "%s\n%s\n* " % (title, '-' * len(title)) + \
+           "\n* ".join(options) + "\n"
+
+GLOBAL_HELP = get_options(CREATE_APP_DESCR, CREATE_EXAMPLE_DESCR, CHECK_DESCR)
+
+LOCAL_HELP = get_options(RENAME_DESCR, PIP_INSTALL_DESCR, ADD_LIBRARY_DESCR,
+                         DEPLOY_COMPLETE_DESCR, DEPLOY_FAST_DESCR,
+                         STATUS_DESCR, CHECK_DESCR)
+
+CREATE_HELP = get_options(CREATE_APP_DESCR, CREATE_EXAMPLE_DESCR)
+
+CREATE_EXAMPLE_HELP = get_usage(CREATE_EXAMPLE_CMD) + \
+                        get_available("examples", get_examples())
+
+CREATE_APP_HELP = get_usage(CREATE_APP_CMD)
+RENAME_HELP = get_usage(RENAME_CMD)
+
+ADD_HELP = get_usage(ADD_LIBRARY_CMD) + \
+            get_available("libraries", get_libraries())
+
+ADD_LIBRARY_HELP = ADD_HELP
+PIP_HELP = get_usage(PIP_INSTALL_CMD)
+PIP_INSTALL_HELP = PIP_HELP
+DEPLOY_HELP_DEPLOYED = get_options(DEPLOY_COMPLETE_DESCR, DEPLOY_FAST_DESCR)
+DEPLOY_HELP_NOT_DEPLOYED = get_usage(DEPLOY_COMPLETE_CMD)
 
 
 class InvalidArgumentException(Exception):
@@ -67,18 +143,6 @@ class KeyValueEvaluator(dict):
             self[key] = value
 
 
-def get_examples():
-    """Return a list of all available examples."""
-
-    return [l for l in os.listdir(examples_dir()) if l != 'examples.conf']
-
-
-def get_libraries():
-    """Return a list of all available libraries."""
-
-    return [l for l in os.listdir(examples_dir()) if l != 'libs.conf']
-
-
 def print_general_help():
     """
     Prints general help information. If the current directory is a project
@@ -86,9 +150,9 @@ def print_general_help():
     commands.
     """
     if is_project_dir():
-        print PROJECT_HELP
+        print LOCAL_HELP
     else:
-        print GENERAL_HELP
+        print GLOBAL_HELP
 
 
 def print_deploy_help():
@@ -133,6 +197,7 @@ def parse_command(args):
             else:
                 print_general_help()
         except InvalidArgumentException as e:
+            print_general_help()
             print "Invalid argument:"
             print e
             sys.exit(0)

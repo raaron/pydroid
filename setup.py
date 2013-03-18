@@ -1,5 +1,6 @@
 import os
 from setuptools import setup
+import subprocess
 
 
 def read(fname):
@@ -47,3 +48,6 @@ setup(name='pydroid',
       )
 
 os.chmod(os.path.join(user_pydroid_config_dir, 'deploy.conf'), 0666)
+print
+print '\033[92m' + 'Restart the shell to enable auto completion for pydroid!' + '\033[0m'
+print

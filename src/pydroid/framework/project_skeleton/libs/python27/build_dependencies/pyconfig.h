@@ -142,7 +142,7 @@
 
 /* Define to 1 if you have the declaration of `isfinite', and to 0 if you
    don't. */
-#undef HAVE_DECL_ISFINITE
+#define HAVE_DECL_ISFINITE 1
 
 /* Define to 1 if you have the declaration of `isinf', and to 0 if you don't.
    */
@@ -215,7 +215,7 @@
 #define HAVE_FCNTL_H 1
 
 /* Define if you have the 'fdatasync' function. */
-#undef HAVE_FDATASYNC
+/* #undef HAVE_FDATASYNC */
 
 /* Define to 1 if you have the `finite' function. */
 #define HAVE_FINITE 1
@@ -267,7 +267,7 @@
 /* #undef HAVE_GCC_ASM_FOR_X87 */
 
 /* Define if you have the getaddrinfo function. */
-#define HAVE_GETADDRINFO 1
+/* #undef HAVE_GETADDRINFO */
 
 /* Define to 1 if you have the `getcwd' function. */
 #define HAVE_GETCWD 1
@@ -282,16 +282,16 @@
 /* #undef HAVE_GETHOSTBYNAME */
 
 /* Define this if you have some version of gethostbyname_r() */
-#undef HAVE_GETHOSTBYNAME_R
+#define HAVE_GETHOSTBYNAME_R 1
 
 /* Define this if you have the 3-arg version of gethostbyname_r(). */
-#undef HAVE_GETHOSTBYNAME_R
+/* #undef HAVE_GETHOSTBYNAME_R_3_ARG */
 
 /* Define this if you have the 5-arg version of gethostbyname_r(). */
-#undef HAVE_GETHOSTBYNAME_R
+/* #undef HAVE_GETHOSTBYNAME_R_5_ARG */
 
 /* Define this if you have the 6-arg version of gethostbyname_r(). */
-#undef HAVE_GETHOSTBYNAME_R
+#define HAVE_GETHOSTBYNAME_R_6_ARG 1
 
 /* Define to 1 if you have the `getitimer' function. */
 #define HAVE_GETITIMER 1
@@ -378,7 +378,7 @@
 #define HAVE_KILL 1
 
 /* Define to 1 if you have the `killpg' function. */
-#undef HAVE_KILLPG
+#define HAVE_KILLPG 1
 
 /* Define if you have the 'kqueue' functions. */
 /* #undef HAVE_KQUEUE */
@@ -1019,7 +1019,7 @@
 #define SIZEOF_VOID_P 4
 
 /* The size of `wchar_t', as computed by sizeof. */
-#define SIZEOF_WCHAR_T 4
+#define SIZEOF_WCHAR_T 1
 
 /* The size of `_Bool', as computed by sizeof. */
 #define SIZEOF__BOOL 1

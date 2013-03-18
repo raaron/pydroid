@@ -44,7 +44,8 @@ def rename_project(new_name, new_domain):
     files = ["%s.pro" % new_name,
              "android/AndroidManifest.xml",
              "android/res/values/strings.xml",
-             "android/build.xml"]
+             "android/build.xml",
+             "main.h"]
     for fn in files:
         python_sed(app_name(), new_name, fn)
 

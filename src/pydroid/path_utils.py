@@ -166,8 +166,12 @@ def necessitas_android_qt_482_dir():
 
 
 def necessitas_qmake_path():
-    return os.path.join(necessitas_android_qt_482_dir(), "armeabi-%s" % arm_version(),
-                        "bin", "qmake")
+    dirname = "armeabi"
+    if arm_version() == "v7a":
+        dirname += "-%s" % arm_version()
+
+    return os.path.join(necessitas_android_qt_482_dir(), dirname, "bin",
+                        "qmake")
 
 
 def necessitas_qtcreator_qt_dir():
@@ -182,7 +186,7 @@ def necessitas_qtcreator_qt_plugin_dir():
 
 
 def device_sdcard_dir():
-    return "/sdcard"
+    return "/sdcard/pydroid"
 
 
 def device_app_dir():

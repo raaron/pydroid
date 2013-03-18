@@ -4,6 +4,8 @@ pydroid
 Framework for PySide on Android based on the work of Martin Kolmann.
 This project provides helpers for simple project creation and deployment.
 
+We support Android devices with API level 8 or higher. The framework currently is designed for Ubuntu and will not work on other systems.
+
 
 Set up your system
 ------------------
@@ -23,7 +25,7 @@ You can always check your system or your project with the following command:
 
 Creating a new project
 ----------------------
-    pydroid create name:app_name domain:my.domain
+    pydroid create app name:APP_NAME domain:COM.EXAMPLE
 
 The created app is already deployable and shows a simple Hello world. The directory my_project_name/app contains the important python and qml files: controller.py, view.py, model.py and view.qml.
 
@@ -71,7 +73,7 @@ Browse to the executable located at /usr/local/lib/python2.7/dist-packages/pydro
 
 Rename a project
 ----------------
-    pydroid rename name:new_name domain:new.domain
+    pydroid rename name:NEW_NAME domain:COM.EXAMPLE
 Be sure, to use the "Complete Deployment" method for the next deployment!
 
 
@@ -81,14 +83,14 @@ Add additional libraries
 ###Python packages (available via pip)
 If you have pip installed (on Ubuntu: 'sudo easy_install pip'), you can use the following commands to install new packages into 'libs/python27':
 
-    pydroid pip install package_name
+    pydroid pip install PACKAGE_NAME
 
 Be sure, to use the "Complete Deployment" method for the next deployment!
 
 ###Other libraries
 The following command adds an additional library to your project (you can list the available libraries using the autocompletion by hitting 'TAB' after 'pydroid add library'):
 
-    pydroid add library library_name
+    pydroid add library LIBRARY_NAME
 
 
 Get information and status of your project

@@ -10,11 +10,6 @@ import sys
 import os
 import subprocess
 
-# Insert the scripts path of the cwd at the beginning of sys.path to be
-# sure to import path_utils in cwd even if the called script is located in
-# pydroid/framework (e.g. because it's an external tool for QtCreator).
-sys.path.insert(0, os.path.join(os.getcwd(), 'scripts'))
-
 from path_utils import *
 import script_utils
 
@@ -35,10 +30,10 @@ def remove_old_files():
         print err
         sys.exit(0)
 
-    files = [fn for fn in out.split('\r\n') if fn and fn != 'python']
+    files = [fn for fn in out.split('\r\n') if fn]
     print "Removing:", files
     for fn in files:
-        rm_cmd = cmd_prefix + ["rm", os.path.join(device_app_dir(), fn)]
+        rm_cmd = cmd_prefix + ["rm", '-r', os.path.join(device_app_dir(), fn)]
         subprocess.call(rm_cmd)
 
 
@@ -50,6 +45,10 @@ def copy_files():
     if not script_utils.compile_app_directory():
         sys.exit(0)
 
+    # Remove previous temporary deployment files from sdcard if they are any
+    rm_cmd = [adb_path(), "shell", "rm", "-r", device_sdcard_dir()]
+    subprocess.call(rm_cmd)
+
     root_len = len(os.path.abspath(app_dir()))
     for root, dirs, files in os.walk(app_dir()):
         archive_root = os.path.abspath(root)[root_len + 1:]
@@ -57,8 +56,7 @@ def copy_files():
         for d in dirs:
             dest_dir = os.path.join(device_app_dir(), archive_root, d)
             print "Making directory:", dest_dir
-            mkdir_cmd = [adb_path(), "shell", "su -c 'mkdir %s'" % dest_dir]
-
+            mkdir_cmd = [adb_path(), "shell", "su -c 'mkdir -p %s'" % dest_dir]
             subprocess.call(mkdir_cmd)
 
         for fn in files:
@@ -68,12 +66,19 @@ def copy_files():
                 sd_card_fn = os.path.join(device_sdcard_dir(),
                                           archive_root, fn)
 
+                # Copy the files temporarily to the sdcard
                 push_cmd = [adb_path(), "push", src_path, sd_card_fn]
                 subprocess.call(push_cmd)
                 print "Copying:", src_path
+
+                # Copy them from sdcard to the device_app_dir
                 cat_cmd = [adb_path(), "shell",
                            "su -c 'cat %s > %s'" % (sd_card_fn, dest_path)]
                 subprocess.call(cat_cmd)
+
+    # Remove temporary deployment files from the sdcard
+    rm_cmd = [adb_path(), "shell", "rm", "-r", device_sdcard_dir()]
+    subprocess.call(rm_cmd)
 
 
 def fast_deploy(show_log=False):

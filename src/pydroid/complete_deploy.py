@@ -19,7 +19,7 @@ def export_environment_variables():
     """Export all necessary variables for the build."""
 
     os.environ["ANDROID_NDK_HOST"] = "linux-x86"
-    os.environ["ANDROID_NDK_PLATFORM"] = "android-14"
+    os.environ["ANDROID_NDK_PLATFORM"] = "android-8"
     os.environ["ANDROID_NDK_ROOT"] = os.path.join(necessitas_dir(),
                                                   "android-ndk")
 
@@ -74,7 +74,7 @@ def build():
                     cwd=build_dir())
 
     print "** building the APK"
-    subprocess.call(["ant", "clean", "debug"],
+    subprocess.call(['ant', 'clean', 'debug'],
                     cwd=android_dir())
 
 
@@ -99,7 +99,7 @@ def complete_deploy(show_log=False):
     export_environment_variables()
     build()
     deploy()
-    restart_app(show_log)
+    restart_app(show_log=show_log)
 
 
 if __name__ == "__main__":

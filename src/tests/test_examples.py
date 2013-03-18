@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from pydroid import create_example
 from pydroid.path_utils import *
 from pydroid import complete_deploy
+from pydroid.script_utils import is_device_rooted
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,15 +43,17 @@ class TestExamples(unittest.TestCase):
 
             self.assertFalse(os.path.exists(project_dir))
 
-            test_utils.stop_app(package_name)
-            self.assertFalse(test_utils.is_app_running(package_name))
+            if is_device_rooted():
+                test_utils.stop_app(package_name)
+                self.assertFalse(test_utils.is_app_running(package_name))
 
             create_example.create_example([example_name])
             self.assertTrue(os.path.exists(project_dir))
             complete_deploy.complete_deploy()
             time.sleep(8)
             self.assertTrue(test_utils.is_app_running(package_name))
-            test_utils.stop_app(package_name)
+            if is_device_rooted():
+                test_utils.stop_app(package_name)
             test_utils.remove_directories_if_exist([project_dir])
 
 

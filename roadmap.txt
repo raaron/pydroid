@@ -1,13 +1,8 @@
 High priority
 =============
-- Remove temporary fast_deploy files from sdcard
+- Get pyjnius working
 - Remove TODO (dependencies) in status.py
 - Set up a virtual machine for virtualbox
-- Prepare a .apk and a sample project for Android 2.3.3 (API level 8 or 9)
-- Get information about arm version (armv5, armv6, armv7):
-  - backwards compatible?
-  - deployment for GooglePlay
-  - Tutorial and list of devices/arm-version about configuring a project
 - Deploy a sample app on GooglePlay, include it in the tutorial
 - Set up a project configuration to include only necessary .so Qt files to
   reduce the memory usage of the uncompressed app.
@@ -41,9 +36,12 @@ Medium priority
 
 Low priority
 ============
+- Get information about arm versions and deployment for GooglePlay:
+  Apps compiled for armv5 should also run on devices with v6 and v7a
+- Remove armversion from config file, set armv5 as default because higher arm
+  versions are backwards compatible.
 - Blog about the project (e.g. planet python)
 - Tutorial:
-  - clarify the architecture differences during build (armv5, armv7a)
   - add build instructions for Qt Components
 - arranging with the Ministro People to carry Python & Qt Components (Minstro
   was initially meant to be a general purpose library distribution tool it is
@@ -61,5 +59,9 @@ Low priority
   12MB I guess), but the size of the uncompressed data still remains the same.
 
 
+Things to do before deployment:
+===============================
+- Remove pathes from deploy.conf, add placeholders instead
+- Uncomment line 10 (sys.path.insert...) in bin/pydroid to load system wide pydroid
 
 
