@@ -10,6 +10,7 @@ High priority
 
 Medium priority
 ===============
+- Use ministro for libs
 - report the size after deployment, for example for the complete deployment script
 - make tests passing with nosetests
 - get meego/QtComponents/Themes compiled

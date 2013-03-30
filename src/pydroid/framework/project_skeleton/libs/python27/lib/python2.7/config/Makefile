@@ -29,16 +29,16 @@ VERSION=	2.7
 srcdir=		.
 
 
-CC=		arm-linux-androideabi-gcc -mandroid  -fomit-frame-pointer --sysroot /home/melf-san/data/coding/SDK/android/necessitas/android-ndk/platforms/android-8/arch-arm
-CXX=		arm-linux-androideabi-g++ -mandroid  -fomit-frame-pointer --sysroot /home/melf-san/data/coding/SDK/android/necessitas/android-ndk/platforms/android-8/arch-arm
+CC=		ccache arm-linux-androideabi-gcc -mandroid  -fomit-frame-pointer --sysroot /home/kivy/android/android-ndk-r8c/platforms/android-14/arch-arm
+CXX=		ccache arm-linux-androideabi-g++ -mandroid  -fomit-frame-pointer --sysroot /home/kivy/android/android-ndk-r8c/platforms/android-14/arch-arm
 MAINCC=		$(CC)
 LINKCC=		$(PURIFY) $(MAINCC)
 AR=		arm-linux-androideabi-ar
 RANLIB=		arm-linux-androideabi-ranlib
-SVNVERSION=	svnversion $(srcdir)
-HGVERSION=	hg id -i $(srcdir)
-HGTAG=		hg id -t $(srcdir)
-HGBRANCH=	hg id -b $(srcdir)
+SVNVERSION=	echo Unversioned directory
+HGVERSION=	
+HGTAG=		
+HGBRANCH=	
 
 GNULD=          yes
 
@@ -63,12 +63,12 @@ MAKESETUP=      $(srcdir)/Modules/makesetup
 # Compiler options
 OPT=		-DNDEBUG -g  -O3 -Wall -Wstrict-prototypes
 BASECFLAGS=	 -fno-strict-aliasing
-CFLAGS=		$(BASECFLAGS) -mandroid  -fomit-frame-pointer --sysroot /home/melf-san/data/coding/SDK/android/necessitas/android-ndk/platforms/android-8/arch-arm -I/home/melf-san/data/coding/SDK/android/build_python/python-for-android/build/openssl/openssl-1.0.1c/include/ $(OPT) $(EXTRA_CFLAGS)
+CFLAGS=		$(BASECFLAGS) -mandroid  -fomit-frame-pointer --sysroot /home/kivy/android/android-ndk-r8c/platforms/android-14/arch-arm $(OPT) $(EXTRA_CFLAGS)
 # Both CPPFLAGS and LDFLAGS need to contain the shell's value for setup.py to
 # be able to build extension modules using the directories specified in the
 # environment variables
 CPPFLAGS=	-I. -IInclude -I$(srcdir)/Include 
-LDFLAGS=	-lm -L/home/melf-san/data/coding/SDK/android/build_python/python-for-android/build/openssl/openssl-1.0.1c/
+LDFLAGS=	-lm
 LDLAST=		
 SGI_ABI=	
 CCSHARED=	-fPIC
@@ -84,7 +84,7 @@ PY_CFLAGS=	$(CFLAGS) $(CPPFLAGS) $(CFLAGSFORSHARED) -DPy_BUILD_CORE
 MACHDEP=	linux3
 
 # Install prefix for architecture-independent files
-prefix=		/home/melf-san/data/coding/SDK/android/build_python/python-for-android/build/python-install
+prefix=		/home/kivy/android/python-for-android/build/python-install
 
 # Install prefix for architecture-dependent files
 exec_prefix=	${prefix}
@@ -134,7 +134,7 @@ MACOSX_DEPLOYMENT_TARGET=
 OTHER_LIBTOOL_OPT=
 
 # Environment to run shared python without installed libraries
-RUNSHARED=       LD_LIBRARY_PATH=/home/melf-san/data/coding/SDK/android/build_python/python-for-android/build/python/Python-2.7.2:
+RUNSHARED=       LD_LIBRARY_PATH=/home/kivy/android/python-for-android/build/python/Python-2.7.2:
 
 # Modes for directories, executables and data files created by the
 # install process.  Default to user-only-writable for all file types.
@@ -143,7 +143,7 @@ EXEMODE=	755
 FILEMODE=	644
 
 # configure script arguments
-CONFIG_ARGS=	 '--host=arm-eabi' '--prefix=/home/melf-san/data/coding/SDK/android/build_python/python-for-android/build/python-install' '--enable-shared' '--disable-toolbox-glue' '--disable-framework' 'host_alias=arm-eabi' 'CC=arm-linux-androideabi-gcc -mandroid  -fomit-frame-pointer --sysroot /home/melf-san/data/coding/SDK/android/necessitas/android-ndk/platforms/android-8/arch-arm' 'CFLAGS=-mandroid  -fomit-frame-pointer --sysroot /home/melf-san/data/coding/SDK/android/necessitas/android-ndk/platforms/android-8/arch-arm -I/home/melf-san/data/coding/SDK/android/build_python/python-for-android/build/openssl/openssl-1.0.1c/include/' 'LDFLAGS=-lm -L/home/melf-san/data/coding/SDK/android/build_python/python-for-android/build/openssl/openssl-1.0.1c/'
+CONFIG_ARGS=	 '--host=arm-eabi' '--prefix=/home/kivy/android/python-for-android/build/python-install' '--enable-shared' '--disable-toolbox-glue' '--disable-framework' 'host_alias=arm-eabi' 'CC=ccache arm-linux-androideabi-gcc -mandroid  -fomit-frame-pointer --sysroot /home/kivy/android/android-ndk-r8c/platforms/android-14/arch-arm' 'CFLAGS=-mandroid  -fomit-frame-pointer --sysroot /home/kivy/android/android-ndk-r8c/platforms/android-14/arch-arm' 'LDFLAGS=-lm'
 
 
 # Subdirectories with code
