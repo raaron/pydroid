@@ -10,6 +10,9 @@ High priority
 
 Medium priority
 ===============
+- Add a script for release (by adapting complete_deploy.py using "ant clean release")
+  - This script could even include signing and aligning the apk reading the
+    required paths from some config file. Check ~/android_release_key/sign_and_align.sh
 - Use ministro for libs
 - report the size after deployment, for example for the complete deployment script
 - make tests passing with nosetests
