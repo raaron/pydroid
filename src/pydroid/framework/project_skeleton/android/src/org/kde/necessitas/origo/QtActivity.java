@@ -327,17 +327,15 @@ public class QtActivity extends Activity {
             String pythonLibsDir = getFilesDir() + "/libs/python27/";
             String dynloadDir = pythonLibsDir + "/lib/python2.7/lib-dynload/";
 
-            System.load(pythonLibsDir + "libsdl.so");
-            System.load(pythonLibsDir + "libsdl_image.so");
-            System.load(pythonLibsDir + "libsdl_ttf.so");
-            System.load(pythonLibsDir + "libsdl_mixer.so");
             System.load(pythonLibsDir + "libpython2.7.so");
             System.load(pythonLibsDir + "libapplication.so");
-            System.load(pythonLibsDir + "libsdl_main.so");
+            System.load(pythonLibsDir + "libminimal_main.so");
 
             System.load(dynloadDir + "_io.so");
             System.load(dynloadDir + "unicodedata.so");
             System.load(pythonLibsDir + "libpymodules.so");
+
+            nativeInit();
 
             ActivityInfo ai=getPackageManager().getActivityInfo(getComponentName(), PackageManager.GET_META_DATA);
             if (ai.metaData.containsKey("android.app.qt_libs_resource_id"))
@@ -1392,5 +1390,7 @@ public class QtActivity extends Activity {
             publishProgress(value);
         }
     }
+
+    public static native void nativeInit();
 
 }
