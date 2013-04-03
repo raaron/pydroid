@@ -6,7 +6,7 @@
 import sys
 import os
 
-# Uncomment the following and adapt it to find the pydroid/src dir in case you did not use setup.py for installation:
+# Uncomment the following and adapt it to find the pydroid/src directory in case you did not use setup.py for installation:
 # sys.path.insert(0, "/home/aaron/programmieren/python/projects/pydroid/src")
 
 from pydroid import create_example

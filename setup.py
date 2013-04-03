@@ -1,6 +1,5 @@
 import os
 from setuptools import setup
-import subprocess
 
 
 def read(fname):
