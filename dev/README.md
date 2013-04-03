@@ -62,6 +62,7 @@ Helper script to speed up the process between changing the pyjnius code and havi
 You need python-for-android (branch: "minimal") for building libraries with this script:
 
     git clone https://github.com/d3vgru/python-for-android
+    cd python-for-android
     git checkout -b minimal remotes/origin/minimal
 
 Example usage:
