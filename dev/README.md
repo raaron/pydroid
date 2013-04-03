@@ -47,7 +47,7 @@ Example usage:
 Compile Python or other Libraries with kivy
 -------------------------------------------
 
-### compile_pyjnius_and_create_app.s
+### compile_pyjnius_and_create_app.sh
 
 **This script requires path adaption to your system!**
 
@@ -58,6 +58,11 @@ Helper script to speed up the process between changing the pyjnius code and havi
   - Creates a new pyjnius_example app
   - Deploys the app to the device
   - Creates a backup of the deploy.conf file for later restore.
+
+You need python-for-android (branch: "minimal") for building libraries with this script:
+
+    git clone https://github.com/d3vgru/python-for-android
+    git checkout -b minimal remotes/origin/minimal
 
 Example usage:
 
