@@ -67,7 +67,7 @@ def get_examples():
 def get_libraries():
     """Return a list of all available libraries."""
 
-    return [l for l in os.listdir(examples_dir()) if l != 'libs.conf']
+    return [l for l in os.listdir(framework_libs_dir()) if l  != 'libs.conf']
 
 
 def get_options(*args):
